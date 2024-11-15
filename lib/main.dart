@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_class_pal/repositories/routes/routes.dart';
 import 'package:flutter_class_pal/repositories/theme/theme.dart';
 import 'package:flutter_class_pal/screens/auth/select_role_screen.dart';
+import 'package:flutter_class_pal/screens/main_screen.dart';
 
 import 'features/auth/bloc/auth_bloc.dart';
 
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         darkTheme: darkTheme,
         themeMode: ThemeMode.system,
         onGenerateRoute: routes,
-        initialRoute: SelectRoleScreen.route,
+        initialRoute: MainScreen.route,
       ),
     );
   }

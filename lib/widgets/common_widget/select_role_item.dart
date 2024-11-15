@@ -61,7 +61,7 @@ class _SelectRoleItemState extends State<SelectRoleItem> {
       },
       child: AnimatedScale(
         scale: _scale,
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         child: Container(
           padding: const EdgeInsets.symmetric(
               horizontal: kPaddingLg, vertical: kPaddingLg),
@@ -73,7 +73,7 @@ class _SelectRoleItemState extends State<SelectRoleItem> {
                 color: kBlackColor.withOpacity(0.1),
                 spreadRadius: 1,
                 blurRadius: 8,
-                offset: Offset(0, 4),
+                offset: const Offset(0, 4),
               ),
             ],
           ),
