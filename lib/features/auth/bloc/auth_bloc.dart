@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-import '../../../repositories/state/app_state.dart';
+import '../../../core/state/app_state.dart';
+
 
 part 'auth_event.dart';
 

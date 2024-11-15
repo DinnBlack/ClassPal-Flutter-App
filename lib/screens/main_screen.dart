@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_class_pal/screens/class/class_page/class_page_screen.dart';
-import 'package:flutter_class_pal/utils/constants/constant.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-import '../utils/ui_util/app_text_style.dart';
-import '../widgets/common_widget/custom_app_bar.dart';
-import '../widgets/common_widget/custom_list_item.dart';
+import '../core/constants/constant.dart';
+import '../core/utils/app_text_style.dart';
+import '../core/widgets/common_widget/custom_app_bar.dart';
+import '../core/widgets/common_widget/custom_list_item.dart';
+import '../features/class/screens/class_page/class_page_screen.dart';
 
 class MainScreen extends StatelessWidget {
   static const route = 'MainScreen';
