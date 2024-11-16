@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/constant.dart';
-import '../../../../core/widgets/common_widget/custom_grid_item.dart';
+import '../../widgets/grid_student_item.dart';
 
 class StudentListScreen extends StatelessWidget {
   static const route = 'StudentListScreen';
@@ -69,14 +69,23 @@ class StudentListScreen extends StatelessWidget {
                 mainAxisSpacing: 8.0,
                 childAspectRatio: itemWidth / itemHeight,
               ),
-              itemCount: students.length,
+              itemCount: students.length + 1,
               itemBuilder: (context, index) {
-                final student = students[index];
-                return CustomGridItem(
-                  avatarUrl: student['avatarUrl']!,
-                  name: student['name']!,
-                  value: student['value']!,
-                );
+                if (index < students.length) {
+                  final student = students[index];
+                  return GridStudentItem(
+                    avatarUrl: student['avatarUrl']!,
+                    name: student['name']!,
+                    value: student['value']!,
+                  );
+                } else {
+                  // "Add Item" widget
+                  return const GridStudentItem(
+                    name: 'Thêm mới',
+                    value: '',
+                    add: true,
+                  );
+                }
               },
             );
           },

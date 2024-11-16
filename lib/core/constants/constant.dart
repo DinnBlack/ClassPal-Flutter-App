@@ -6,7 +6,7 @@ const String WELCOME_MESSAGE =
     "Chào mừng đến với ứng dụng ClassPal của chúng tôi!";
 
 // App Colors
-const Color kPrimaryColor = Color(0xFF3772F0);
+const Color kPrimaryColor = Color(0xFF21A9B7);
 const Color kSecondaryColor = Color(0xFF85A6F5);
 const Color kBackgroundColor = Color(0xFFFFFFFF);
 final Color kLightGreyColor = Colors.grey.withOpacity(0.2);

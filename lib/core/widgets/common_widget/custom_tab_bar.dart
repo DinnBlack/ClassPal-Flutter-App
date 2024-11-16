@@ -64,7 +64,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
                       Text(
                         widget.tabTitles[index],
                         style: AppTextStyle.semibold(
-                          kTextSizeSm,
+                          kTextSizeXs,
                           widget.currentIndex == index
                               ? kPrimaryColor
                               : kGreyColor,

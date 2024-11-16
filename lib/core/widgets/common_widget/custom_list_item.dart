@@ -13,6 +13,9 @@ class CustomListItem extends StatefulWidget {
   final VoidCallback? onTap;
   final IconData? leadingIcon;
   final bool? trailingIcon;
+  final TextStyle? titleStyle;
+  final TextStyle? subtitleStyle;
+  final Widget? customLeadingWidget;  // Thêm thuộc tính tùy chỉnh widget ở đầu
 
   const CustomListItem({
     super.key,
@@ -24,14 +27,16 @@ class CustomListItem extends StatefulWidget {
     this.onTap,
     this.leadingIcon,
     this.trailingIcon = false,
+    this.titleStyle,
+    this.subtitleStyle,
+    this.customLeadingWidget,  // Thêm tham số này
   });
 
   @override
   State<CustomListItem> createState() => _CustomListItemState();
 }
 
-class _CustomListItemState extends State<CustomListItem>
-    with SingleTickerProviderStateMixin {
+class _CustomListItemState extends State<CustomListItem> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -88,20 +93,23 @@ class _CustomListItemState extends State<CustomListItem>
               ),
               child: Row(
                 children: [
-                  // Image
-                  if (widget.imageUrl != null)
-                    ClipOval(
-                      child: Padding(
-                        padding: const EdgeInsets.all(kPaddingSm),
-                        child: Image.asset(
-                          widget.imageUrl!,
-                          fit: BoxFit.cover,
-                          width: 32,
-                          height: 32,
+                  // Nếu có customLeadingWidget thì sử dụng nó, nếu không sử dụng Image
+                  widget.customLeadingWidget ??
+                      (widget.imageUrl != null
+                          ? ClipOval(
+                        child: Padding(
+                          padding: const EdgeInsets.all(kPaddingSm),
+                          child: Image.asset(
+                            widget.imageUrl!,
+                            fit: BoxFit.cover,
+                            width: 32,
+                            height: 32,
+                          ),
                         ),
-                      ),
-                    ),
-                  if (widget.imageUrl != null) const SizedBox(width: kMarginMd),
+                      )
+                          : SizedBox()),
+
+                  if (widget.imageUrl != null || widget.customLeadingWidget != null) const SizedBox(width: kMarginMd),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,16 +117,12 @@ class _CustomListItemState extends State<CustomListItem>
                         if (widget.title != null)
                           Text(
                             widget.title!,
-                            style: AppTextStyle.semibold(
-                              kTextSizeSm,
-                            ),
+                            style: widget.titleStyle ?? AppTextStyle.semibold(kTextSizeSm),
                           ),
                         if (widget.subtitle != null)
                           Text(
                             widget.subtitle!,
-                            style: AppTextStyle.light(
-                              kTextSizeXs,
-                            ),
+                            style: widget.subtitleStyle ?? AppTextStyle.light(kTextSizeXs),
                           ),
                       ],
                     ),
@@ -140,7 +144,6 @@ class _CustomListItemState extends State<CustomListItem>
                       ),
                     ),
                   const SizedBox(width: kMarginMd),
-                  // Trailing icon
                   if (widget.trailingIcon!)
                     const FaIcon(
                       FontAwesomeIcons.chevronRight,

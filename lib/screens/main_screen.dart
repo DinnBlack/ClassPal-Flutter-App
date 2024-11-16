@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../core/constants/constant.dart';
 import '../core/utils/app_text_style.dart';
 import '../core/widgets/common_widget/custom_app_bar.dart';
 import '../core/widgets/common_widget/custom_list_item.dart';
-import '../features/class/screens/class_page/class_page_screen.dart';
+import '../features/class/screens/class_main_screen.dart';
 
 class MainScreen extends StatelessWidget {
   static const route = 'MainScreen';
@@ -69,7 +68,10 @@ class MainScreen extends StatelessWidget {
             CircleAvatar(
               radius: 16,
               backgroundColor: Colors.blue,
-              child: FaIcon(FontAwesomeIcons.solidUser, size: 18,),
+              child: FaIcon(
+                FontAwesomeIcons.solidUser,
+                size: 18,
+              ),
             ),
             SizedBox(width: kMarginSm),
             FaIcon(
@@ -140,17 +142,21 @@ class Body extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  showMaterialModalBottomSheet(
-                    expand: false,
+                  showBottomSheet(
                     context: context,
-                    builder: (context) => SingleChildScrollView(
-                      controller: ModalScrollController.of(context),
-                      child: Container(
-                         width: double.infinity,
-                        height: 100,
-                        color: kPrimaryColor,
-                      ),
-                    ),
+                    builder: (context) {
+                      return Container(
+                        padding: EdgeInsets.all(16.0),
+                        color: Colors.blue,
+                        height: 200,
+                        child: const Center(
+                          child: Text(
+                            'Nội dung của Bottom Sheet',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
                 child: Row(
@@ -176,9 +182,9 @@ class Body extends StatelessWidget {
             title: 'Lớp 9a2',
             textColor: Colors.black,
             onTap: () {
-              Navigator.pushNamed(context, ClassPageScreen.route);
+              Navigator.pushNamed(context, ClassMainScreen.route);
             },
-            trailingIcon:true,
+            trailingIcon: true,
           ),
           const SizedBox(
             height: kMarginMd,

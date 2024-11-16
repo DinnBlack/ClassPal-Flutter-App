@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class MessagePageScreen extends StatelessWidget {
-  static const route = 'MessagePageScreen';
-  const MessagePageScreen({super.key});
+class ClassMessagePage extends StatelessWidget {
+  static const route = 'ClassMessagePage';
+  const ClassMessagePage({super.key});
 
   @override
   Widget build(BuildContext context) {

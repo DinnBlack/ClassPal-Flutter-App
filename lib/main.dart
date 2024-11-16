@@ -1,15 +1,26 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_class_pal/routes/routes.dart';
 import 'package:flutter_class_pal/screens/main_screen.dart';
 
-import 'core/theme/theme.dart';
+import 'core/services/firebase/firebase_option.dart';
+import 'core/themes/theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.android,
+  );
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

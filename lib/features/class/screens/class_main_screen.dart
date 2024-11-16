@@ -1,26 +1,26 @@
 import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:awesome_bottom_bar/tab_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_class_pal/features/class/screens/class_page/student_page_screen.dart';
+import 'package:flutter_class_pal/features/class/screens/class_page/class_dashboard_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../../core/constants/constant.dart';
-import '../../../../core/utils/app_text_style.dart';
-import '../../../../core/widgets/common_widget/custom_app_bar.dart';
-import 'calendar_page_screen.dart';
-import 'message_page_screen.dart';
-import 'news_page_screen.dart';
+import '../../../core/constants/constant.dart';
+import '../../../core/utils/app_text_style.dart';
+import '../../../core/widgets/common_widget/custom_app_bar.dart';
+import 'class_page/class_schedule_page.dart';
+import 'class_page/message_page_screen.dart';
+import 'class_page/class_board_page.dart';
 
-class ClassPageScreen extends StatefulWidget {
-  static const route = 'ClassPageScreen';
+class ClassMainScreen extends StatefulWidget {
+  static const route = 'ClassMainScreen';
 
-  const ClassPageScreen({super.key});
+  const ClassMainScreen({super.key});
 
   @override
-  _ClassPageScreenState createState() => _ClassPageScreenState();
+  _ClassMainScreenState createState() => _ClassMainScreenState();
 }
 
-class _ClassPageScreenState extends State<ClassPageScreen> {
+class _ClassMainScreenState extends State<ClassMainScreen> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
@@ -43,10 +43,10 @@ class _ClassPageScreenState extends State<ClassPageScreen> {
   }
 
   final List<Widget> _pages = [
-    StudentPageScreen(),
-    NewsPageScreen(),
-    CalendarPageScreen(),
-    MessagePageScreen(),
+    const ClassDashboardPage(),
+    const ClassBoardPage(),
+    const ClassSchedulePage(),
+    const ClassMessagePage(),
   ];
 
   static const List<TabItem> items = [
@@ -101,25 +101,7 @@ class _ClassPageScreenState extends State<ClassPageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(
-        title: 'Lớp 9a3',
-        leading: const FaIcon(
-          FontAwesomeIcons.arrowLeft,
-          size: 20,
-        ),
-        titleStyle: AppTextStyle.bold(kTextSizeXl),
-        actions: const [
-          FaIcon(
-            FontAwesomeIcons.bell,
-            size: 20,
-          ),
-          FaIcon(
-            FontAwesomeIcons.ellipsis,
-            size: 20,
-          ),
-        ],
-        isTitleCenter: true,
-      ),
+
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
