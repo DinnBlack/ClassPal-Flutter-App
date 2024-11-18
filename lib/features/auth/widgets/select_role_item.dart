@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/auth_bloc.dart';
-import '../screens/auth_register/register_screen.dart';
+import '../screens/auth_screen.dart';
 import '../../../core/constants/constant.dart';
 import '../../../core/utils/app_text_style.dart';
 
@@ -47,7 +47,7 @@ class _SelectRoleItemState extends State<SelectRoleItem> {
         });
       },
       onTap: () {
-        context.read<AuthBloc>().add(RoleSelected(widget.title));
+        context.read<AuthBloc>().add(AuthSelectRoleStarted(widget.title));
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
@@ -55,7 +55,7 @@ class _SelectRoleItemState extends State<SelectRoleItem> {
             return const FractionallySizedBox(
                 alignment: Alignment.bottomCenter,
                 heightFactor: 0.95,
-                child: RegisterScreen());
+                child: AuthScreen());
           },
         );
       },

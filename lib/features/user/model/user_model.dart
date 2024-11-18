@@ -2,18 +2,24 @@ class UserModel {
   String userId;
   String name;
   String email;
-  Map<String, bool> roles;
+  String password;
+  String role;
+  String gender;
   List<String> schoolsIds;
   List<String> classesIds;
+  List<String>? childrenIds;
 
 //<editor-fold desc="Data Methods">
   UserModel({
     required this.userId,
     required this.name,
     required this.email,
-    required this.roles,
+    required this.password,
+    required this.role,
+    required this.gender,
     required this.schoolsIds,
     required this.classesIds,
+    this.childrenIds,
   });
 
   @override
@@ -24,18 +30,24 @@ class UserModel {
           userId == other.userId &&
           name == other.name &&
           email == other.email &&
-          roles == other.roles &&
+          password == other.password &&
+          role == other.role &&
+          gender == other.gender &&
           schoolsIds == other.schoolsIds &&
-          classesIds == other.classesIds);
+          classesIds == other.classesIds &&
+          childrenIds == other.childrenIds);
 
   @override
   int get hashCode =>
       userId.hashCode ^
       name.hashCode ^
       email.hashCode ^
-      roles.hashCode ^
+      password.hashCode ^
+      role.hashCode ^
+      gender.hashCode ^
       schoolsIds.hashCode ^
-      classesIds.hashCode;
+      classesIds.hashCode ^
+      childrenIds.hashCode;
 
   @override
   String toString() {
@@ -43,9 +55,12 @@ class UserModel {
         ' userId: $userId,' +
         ' name: $name,' +
         ' email: $email,' +
-        ' roles: $roles,' +
+        ' password: $password,' +
+        ' role: $role,' +
+        ' gender: $gender,' +
         ' schoolsIds: $schoolsIds,' +
         ' classesIds: $classesIds,' +
+        ' childrenIds: $childrenIds,' +
         '}';
   }
 
@@ -53,17 +68,23 @@ class UserModel {
     String? userId,
     String? name,
     String? email,
-    Map<String, bool>? roles,
+    String? password,
+    String? role,
+    String? gender,
     List<String>? schoolsIds,
     List<String>? classesIds,
+    List<String>? childrenIds,
   }) {
     return UserModel(
       userId: userId ?? this.userId,
       name: name ?? this.name,
       email: email ?? this.email,
-      roles: roles ?? this.roles,
+      password: password ?? this.password,
+      role: role ?? this.role,
+      gender: gender ?? this.gender,
       schoolsIds: schoolsIds ?? this.schoolsIds,
       classesIds: classesIds ?? this.classesIds,
+      childrenIds: childrenIds ?? this.childrenIds,
     );
   }
 
@@ -72,9 +93,12 @@ class UserModel {
       'userId': this.userId,
       'name': this.name,
       'email': this.email,
-      'roles': this.roles,
+      'password': this.password,
+      'role': this.role,
+      'gender': this.gender,
       'schoolsIds': this.schoolsIds,
       'classesIds': this.classesIds,
+      'childrenIds': this.childrenIds,
     };
   }
 
@@ -83,9 +107,12 @@ class UserModel {
       userId: map['userId'] as String,
       name: map['name'] as String,
       email: map['email'] as String,
-      roles: map['roles'] as Map<String, bool>,
-      schoolsIds: map['schoolsIds'] as List<String>,
-      classesIds: map['classesIds'] as List<String>,
+      password: map['password'] as String,
+      role: map['role'] as String,
+      gender: map['gender'] as String,
+      schoolsIds: List<String>.from(map['schoolsIds'] ?? []),
+      classesIds: List<String>.from(map['classesIds'] ?? []),
+      childrenIds: List<String>.from(map['childrenIds'] ?? []),
     );
   }
 

@@ -11,6 +11,8 @@ class CustomButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final double radius;
   final bool isDisabled;
+  final TextStyle? textStyle; // TextStyle tùy chỉnh
+  final IconData? icon; // IconData tùy chỉnh
 
   const CustomButton({
     super.key,
@@ -21,6 +23,8 @@ class CustomButton extends StatefulWidget {
     this.onPressed,
     this.radius = kBorderRadiusXl,
     this.isDisabled = false,
+    this.textStyle, // Khởi tạo textStyle tùy chỉnh
+    this.icon, // Khởi tạo icon tùy chỉnh
   });
 
   @override
@@ -60,6 +64,8 @@ class _CustomButtonState extends State<CustomButton> {
         ? (widget.backgroundColor ?? kPrimaryColor).withOpacity(0.5)
         : (widget.backgroundColor ?? kPrimaryColor);
 
+    // Xử lý hiệu ứng thụt vào khi nhấn
+    final scale = _isPressed ? 0.95 : 1.0;
 
     return GestureDetector(
       onTapDown: _onTapDown,
@@ -78,22 +84,28 @@ class _CustomButtonState extends State<CustomButton> {
               ? Border.all(color: buttonColor)
               : null,
           borderRadius: BorderRadius.circular(widget.radius),
-          boxShadow: _isPressed && !widget.isDisabled
-              ? [
-            BoxShadow(
-              color: buttonColor.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 8,
-            ),
-          ]
-              : [],
         ),
-        child: Center(
-          child: Text(
-            widget.text,
-            style: AppTextStyle.semibold(
-              kTextSizeLg,
-              widget.isOutlineButton ? buttonColor : widget.textColor!,
+        // Áp dụng hiệu ứng scale cho toàn bộ container (bao gồm cả nền button)
+        child: Transform.scale(
+          scale: scale, // Áp dụng hiệu ứng thụt vào cho toàn bộ button
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Nếu có icon, hiển thị icon từ IconData
+                if (widget.icon != null)
+                  Icon(widget.icon!, color: widget.isDisabled ? Colors.grey : kWhiteColor, size: 16,),
+                // Khoảng cách giữa icon và text
+                if (widget.icon != null) const SizedBox(width: kMarginMd),
+                // Hiển thị văn bản với TextStyle tùy chỉnh hoặc mặc định
+                Text(
+                  widget.text,
+                  style: widget.textStyle ?? AppTextStyle.semibold(
+                    kTextSizeLg,
+                    widget.isOutlineButton ? buttonColor : widget.textColor!,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

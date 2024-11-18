@@ -32,6 +32,7 @@ class _GridStudentItemState extends State<GridStudentItem>
       vsync: this,
       lowerBound: 0.95,
       upperBound: 1.0,
+      duration: const Duration(milliseconds: 200), // Add a duration for the animation
     );
   }
 
@@ -97,9 +98,7 @@ class _GridStudentItemState extends State<GridStudentItem>
                         textAlign: TextAlign.center,
                         style: AppTextStyle.semibold(
                           10,
-                          widget.add
-                              ? kPrimaryColor
-                              : kBlackColor,
+                          widget.add ? kPrimaryColor : kBlackColor,
                         ),
                       ),
                     ),

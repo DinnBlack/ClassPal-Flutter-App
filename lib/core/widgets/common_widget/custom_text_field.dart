@@ -4,7 +4,7 @@ import '../../constants/constant.dart';
 import '../../utils/app_text_style.dart';
 
 class CustomTextField extends StatefulWidget {
-  final String text;
+  final String? text; // Có thể null
   final bool isPassword;
   final bool isNumber;
   final List<String>? options;
@@ -16,7 +16,7 @@ class CustomTextField extends StatefulWidget {
 
   const CustomTextField({
     super.key,
-    required this.text,
+    this.text,
     this.isPassword = false,
     this.isNumber = false,
     this.options,
@@ -101,7 +101,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     Navigator.pop(context);
                   },
                 );
-
               },
             ),
           ),
@@ -125,7 +124,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         obscureText: widget.isPassword && _isObscured,
         readOnly: isOptionMode,
         decoration: InputDecoration(
-          labelText: widget.text,
+          labelText: widget.text?.isNotEmpty == true ? widget.text : null,
           labelStyle: AppTextStyle.light(kTextSizeMd, kGreyColor),
           contentPadding: EdgeInsets.zero,
           border: UnderlineInputBorder(
@@ -155,7 +154,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
               : (widget.isPassword
               ? InkWell(
             child: Icon(
-              _isObscured ? Icons.visibility : Icons.visibility_off,
+              _isObscured
+                  ? Icons.visibility
+                  : Icons.visibility_off,
               size: 16,
             ),
             onTap: () {

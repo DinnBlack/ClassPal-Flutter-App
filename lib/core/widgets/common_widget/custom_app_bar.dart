@@ -37,6 +37,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       preferredSize: const Size.fromHeight(60),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: kPaddingLg),
+        alignment: Alignment.center,
         color: backgroundColor,
         child: SafeArea(
           child: isTitleCenter

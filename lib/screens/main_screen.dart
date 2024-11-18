@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_class_pal/core/state/app_state.dart';
+import 'package:flutter_class_pal/core/widgets/common_widget/custom_button.dart';
+import 'package:flutter_class_pal/features/user/model/user_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -8,10 +11,17 @@ import '../core/widgets/common_widget/custom_app_bar.dart';
 import '../core/widgets/common_widget/custom_list_item.dart';
 import '../features/class/screens/class_main_screen.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   static const route = 'MainScreen';
 
   const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  final UserModel? currentUser = AppState.getUser();
 
   void showTopSheet(BuildContext context) {
     showGeneralDialog(
@@ -67,7 +77,7 @@ class MainScreen extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 16,
-              backgroundColor: Colors.blue,
+              backgroundColor: kPrimaryColor,
               child: FaIcon(
                 FontAwesomeIcons.solidUser,
                 size: 18,
@@ -84,14 +94,17 @@ class MainScreen extends StatelessWidget {
           print("Menu tapped");
         },
       ),
-      body: const Body(),
+      body: Body(currentUser: currentUser),
     );
   }
 }
 
 class Body extends StatelessWidget {
+  final UserModel? currentUser;
+
   const Body({
     super.key,
+    required this.currentUser,
   });
 
   @override
@@ -106,7 +119,7 @@ class Body extends StatelessWidget {
             style: AppTextStyle.semibold(kTextSizeMd, kGreyColor),
           ),
           Text(
-            "Thầy Đinh Hoàng Phúc",
+            "${currentUser?.gender} ${currentUser?.name}",
             style: AppTextStyle.semibold(kTextSizeXl),
           ),
           const SizedBox(
@@ -119,73 +132,59 @@ class Body extends StatelessWidget {
           const SizedBox(
             height: kMarginMd,
           ),
-          CustomListItem(
-            imageUrl: 'assets/images/school.png',
-            title: 'THCS - THPT Long Bình',
-            subtitle: 'Flutter Developer',
-            textColor: Colors.black,
-            onTap: () {
-              print('Item tapped!');
-            },
-            leadingIcon: Iconsax.information5,
-            trailingIcon: true,
+          // Kiểm tra xem người dùng đã có trường học hay chưa
+          if (currentUser?.schoolsIds == null ||
+              currentUser?.schoolsIds?.isEmpty == true)
+            CustomButton(
+              text: 'Thêm trường học',
+              textStyle: AppTextStyle.medium(kTextSizeMd, kWhiteColor),
+              icon: FontAwesomeIcons.plus,
+            ),
+          // Nếu người dùng đã có trường học, hiển thị thông tin trường học
+          if (currentUser?.schoolsIds != null &&
+              currentUser?.schoolsIds?.isNotEmpty == true)
+            CustomListItem(
+              imageUrl: 'assets/images/school.png',
+              title: currentUser?.schoolsIds[0] ?? 'Trường học không có',
+              subtitle: 'Flutter Developer',
+              textColor: Colors.black,
+              onTap: () {
+                print('Item tapped!');
+              },
+              leadingIcon: Iconsax.information5,
+              trailingIcon: true,
+            ),
+          const SizedBox(
+            height: kMarginMd,
+          ),
+          Text(
+            "Các lớp học của bạn",
+            style: AppTextStyle.semibold(kTextSizeMd),
           ),
           const SizedBox(
             height: kMarginMd,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Các lớp học của bạn",
-                style: AppTextStyle.semibold(kTextSizeMd),
-              ),
-              GestureDetector(
-                onTap: () {
-                  showBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return Container(
-                        padding: EdgeInsets.all(16.0),
-                        color: Colors.blue,
-                        height: 200,
-                        child: const Center(
-                          child: Text(
-                            'Nội dung của Bottom Sheet',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.add_rounded,
-                      color: kPrimaryColor,
-                      size: 18,
-                    ),
-                    Text("Thêm lớp học",
-                        style:
-                            AppTextStyle.semibold(kTextSizeSm, kPrimaryColor)),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: kMarginMd,
-          ),
-          CustomListItem(
-            imageUrl: 'assets/images/class.png',
-            title: 'Lớp 9a2',
-            textColor: Colors.black,
-            onTap: () {
-              Navigator.pushNamed(context, ClassMainScreen.route);
-            },
-            trailingIcon: true,
-          ),
+          // Kiểm tra xem người dùng đã có lớp học hay chưa
+          if (currentUser?.classesIds == null ||
+              currentUser?.classesIds?.isEmpty == true)
+            CustomButton(
+              text: 'Thêm lớp học',
+              textStyle: AppTextStyle.medium(kTextSizeMd, kWhiteColor),
+              icon: FontAwesomeIcons.plus,
+            ),
+          // Nếu người dùng đã có lớp học, hiển thị thông tin lớp học
+          if (currentUser?.classesIds != null &&
+              currentUser?.classesIds?.isNotEmpty == true)
+            CustomListItem(
+              imageUrl: 'assets/images/class.png',
+              title: 'Lớp 9a2',
+              // Cập nhật lại theo thông tin lớp học từ currentUser
+              textColor: Colors.black,
+              onTap: () {
+                Navigator.pushNamed(context, ClassMainScreen.route);
+              },
+              trailingIcon: true,
+            ),
           const SizedBox(
             height: kMarginMd,
           ),
