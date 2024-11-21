@@ -15,7 +15,7 @@ class ClassBoardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Lớp 9a3',
+        title: 'Bảng tin',
         leading: const FaIcon(
           FontAwesomeIcons.arrowLeft,
           size: 20,

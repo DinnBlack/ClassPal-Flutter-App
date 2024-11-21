@@ -9,6 +9,7 @@ import '../../../../core/widgets/common_widget/custom_tab_bar.dart';
 import '../../../student/screens/student_group/student_group_screen.dart';
 import '../../../student/screens/student_list/student_list_screen.dart';
 import '../../model/class_model.dart';
+import '../class_attendance/class_attendance_screen.dart';
 
 class ClassDashboardPage extends StatefulWidget {
   static const route = "ClassDashboardPage";
@@ -141,50 +142,51 @@ class _ClassDashboardPageState extends State<ClassDashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kBackgroundColor,
-      appBar: CustomAppBar(
-        title: widget.classData.className,
-        leading: const FaIcon(
-          FontAwesomeIcons.arrowLeft,
-          size: 20,
-        ),
-        titleStyle: AppTextStyle.bold(kTextSizeXl),
-        actions: [
-          const FaIcon(
-            FontAwesomeIcons.bell,
-            size: 20,
-          ),
-          InkWell(
-            child: const FaIcon(
-              FontAwesomeIcons.ellipsis,
-              size: 20,
-            ),
-            onTap: () {
-              // Gọi hàm để hiển thị BottomSheet
-              _showOptionsBottomSheet(context);
-            },
-          ),
-        ],
-        isTitleCenter: true,
-      ),
-      body: Column(
-        children: [
-          Stack(
-            children: [
-              Center(
-                child: CustomTabBar(
-                  currentIndex: _currentIndex,
-                  onTabTapped: _onTabTapped,
-                  tabTitles: const ["HỌC SINH", "NHÓM"],
-                  tabBarWidthRatio: 2 / 3,
-                  lineHeight: 4,
-                  linePadding: 10.0,
-                  tabBarHeight: 40,
-                ),
+      appBar: _buildAppBar(context),
+      body: _buildBody(),
+    );
+  }
+
+  Column _buildBody() {
+    return Column(
+      children: [
+        Stack(
+          children: [
+            Center(
+              child: CustomTabBar(
+                currentIndex: _currentIndex,
+                onTabTapped: _onTabTapped,
+                tabTitles: const ["HỌC SINH", "NHÓM"],
+                tabBarWidthRatio: 2 / 3,
+                lineHeight: 4,
+                linePadding: 10.0,
+                tabBarHeight: 40,
               ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: kPaddingMd),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: kPaddingMd),
+                child: GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) {
+                        return const ClipRRect(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(kBorderRadiusMd),
+                          ),
+                          child: FractionallySizedBox(
+                            alignment: Alignment.bottomCenter,
+                            heightFactor: 0.95,
+                            child: ClassAttendanceScreen(),
+                          ),
+                        );
+                      },
+                    );
+
+                  },
                   child: Container(
                     width: 35,
                     height: 35,
@@ -205,24 +207,52 @@ class _ClassDashboardPageState extends State<ClassDashboardPage> {
                   ),
                 ),
               ),
+            ),
+          ],
+        ),
+        Expanded(
+          child: PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            children: [
+              StudentListScreen(),
+              const StudentGroupScreen(),
             ],
           ),
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              children: [
-                StudentListScreen(),
-                const StudentGroupScreen(),
-              ],
-            ),
-          ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  CustomAppBar _buildAppBar(BuildContext context) {
+    return CustomAppBar(
+      title: widget.classData.className,
+      leading: const FaIcon(
+        FontAwesomeIcons.arrowLeft,
+        size: 20,
       ),
+      titleStyle: AppTextStyle.bold(kTextSizeXl),
+      actions: [
+        const FaIcon(
+          FontAwesomeIcons.bell,
+          size: 20,
+        ),
+        InkWell(
+          child: const FaIcon(
+            FontAwesomeIcons.ellipsis,
+            size: 20,
+          ),
+          onTap: () {
+            // Gọi hàm để hiển thị BottomSheet
+            _showOptionsBottomSheet(context);
+          },
+        ),
+      ],
+      isTitleCenter: true,
     );
   }
 }

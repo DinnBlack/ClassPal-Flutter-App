@@ -11,8 +11,6 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthFirebase _authFirebase;
-  String? _currentRole;
-  UserModel? _currentUser;
 
   AuthBloc(this._authFirebase) : super(AuthInitial()) {
     on<AuthSelectRoleStarted>(_onAuthSelectRoleStarted);
@@ -23,7 +21,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   // bloc chọn role
   Future<void> _onAuthSelectRoleStarted(
       AuthSelectRoleStarted event, Emitter<AuthState> emit) async {
-    _currentRole = event.role;
     AppState.setRole(event.role);
     emit(RoleSelectState(event.role));
   }
@@ -38,7 +35,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     print(event.password);
     print(user);
     if (user != null) {
-      _currentUser = user;
       AppState.setUser(user);
       emit(AuthLoginSuccess(user));
       print('Bloc Thành Công');

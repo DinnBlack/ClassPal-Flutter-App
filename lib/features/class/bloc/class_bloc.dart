@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
+import 'package:flutter_class_pal/features/teacher/model/teacher_model.dart';
 import 'package:meta/meta.dart';
 
 import '../../../core/state/app_state.dart';
@@ -11,6 +14,10 @@ part 'class_state.dart';
 
 class ClassBloc extends Bloc<ClassEvent, ClassState> {
   final ClassFirebase _classFirebase;
+  final StreamController<void> _fetchStreamController =
+      StreamController<void>.broadcast();
+
+  Stream<void> get fetchStream => _fetchStreamController.stream;
 
   ClassBloc(this._classFirebase) : super(ClassInitial()) {
     on<ClassCreateStarted>(_onClassCreateStarted);
@@ -37,19 +44,21 @@ class ClassBloc extends Bloc<ClassEvent, ClassState> {
         classId: '',
         className: event.className,
         schoolId: '',
-        teacherIds: [currentUser.userId],
-        studentIds: [],
         creatorId: currentUser.userId,
         isPersonalClass: false,
+        students: [],
+        teachers: [TeacherModel(uid: currentUser.userId, role: 'Giáo viên')],
       );
 
       String classId = await _classFirebase.createClass(newClass);
       if (classId.isNotEmpty) {
         emit(ClassCreateSuccess());
         emit(ClassInitial());
+        _fetchStreamController.add(null);
       } else {
         emit(ClassCreateFailure());
         emit(ClassInitial());
+        add(ClassFetchStarted());
       }
     } catch (e) {
       print("Error creating class: $e");
@@ -61,18 +70,9 @@ class ClassBloc extends Bloc<ClassEvent, ClassState> {
       ClassFetchStarted event, Emitter<ClassState> emit) async {
     emit(ClassFetchInProgress());
     try {
-      var currentUser = AppState.getUser();
-      print(currentUser);
-      if (currentUser == null) {
-        emit(ClassFetchFailure());
-        return;
-      }
-
       List<ClassModel> classes = await _classFirebase.fetchClasses();
       print(classes);
-
       emit(ClassFetchSuccess(classes));
-
     } catch (e) {
       print("Error fetching classes: $e");
       emit(ClassFetchFailure());

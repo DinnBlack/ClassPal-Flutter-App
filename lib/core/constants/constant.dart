@@ -13,6 +13,7 @@ final Color kLightGreyColor = Colors.grey.withOpacity(0.2);
 const Color kTransparentColor = Colors.transparent;
 const Color kBlackColor = Colors.black;
 const Color kWhiteColor = Colors.white;
+const Color kBlueColor = Colors.blue;
 const Color kGreyColor = Colors.grey;
 const Color kGreenColor = Colors.green;
 const Color kRedColor = Colors.red;

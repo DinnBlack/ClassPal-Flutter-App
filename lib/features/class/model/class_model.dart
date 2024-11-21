@@ -1,3 +1,5 @@
+import '../../student/model/student_model.dart';
+import '../../teacher/model/teacher_model.dart';
 import 'attendance_record_model.dart';
 
 class ClassModel {
@@ -5,19 +7,18 @@ class ClassModel {
   String creatorId;
   String className;
   String? schoolId;
-  List<String> teacherIds;
-  List<String> studentIds;
+  List<TeacherModel> teachers;
+  List<StudentModel> students;
   bool isPersonalClass;
   final List<AttendanceRecordModel>? attendanceRecords;
 
-//<editor-fold desc="Data Methods">
   ClassModel({
     required this.classId,
     required this.creatorId,
     required this.className,
     this.schoolId,
-    required this.teacherIds,
-    required this.studentIds,
+    required this.teachers,
+    required this.students,
     required this.isPersonalClass,
     this.attendanceRecords,
   });
@@ -25,16 +26,16 @@ class ClassModel {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ClassModel &&
-          runtimeType == other.runtimeType &&
-          classId == other.classId &&
-          creatorId == other.creatorId &&
-          className == other.className &&
-          schoolId == other.schoolId &&
-          teacherIds == other.teacherIds &&
-          studentIds == other.studentIds &&
-          isPersonalClass == other.isPersonalClass &&
-          attendanceRecords == other.attendanceRecords);
+          (other is ClassModel &&
+              runtimeType == other.runtimeType &&
+              classId == other.classId &&
+              creatorId == other.creatorId &&
+              className == other.className &&
+              schoolId == other.schoolId &&
+              teachers == other.teachers &&
+              students == other.students &&
+              isPersonalClass == other.isPersonalClass &&
+              attendanceRecords == other.attendanceRecords);
 
   @override
   int get hashCode =>
@@ -42,8 +43,8 @@ class ClassModel {
       creatorId.hashCode ^
       className.hashCode ^
       schoolId.hashCode ^
-      teacherIds.hashCode ^
-      studentIds.hashCode ^
+      teachers.hashCode ^
+      students.hashCode ^
       isPersonalClass.hashCode ^
       (attendanceRecords?.hashCode ?? 0);
 
@@ -54,8 +55,8 @@ class ClassModel {
         ' creatorId: $creatorId,' +
         ' className: $className,' +
         ' schoolId: $schoolId,' +
-        ' teacherIds: $teacherIds,' +
-        ' studentIds: $studentIds,' +
+        ' teachers: $teachers,' +
+        ' students: $students,' +
         ' isPersonalClass: $isPersonalClass,' +
         '}';
   }
@@ -65,8 +66,8 @@ class ClassModel {
     String? creatorId,
     String? className,
     String? schoolId,
-    List<String>? teacherIds,
-    List<String>? studentIds,
+    List<TeacherModel>? teachers,
+    List<StudentModel>? students,
     bool? isPersonalClass,
     List<AttendanceRecordModel>? attendanceRecords,
   }) {
@@ -75,8 +76,8 @@ class ClassModel {
       creatorId: creatorId ?? this.creatorId,
       className: className ?? this.className,
       schoolId: schoolId ?? this.schoolId,
-      teacherIds: teacherIds ?? this.teacherIds,
-      studentIds: studentIds ?? this.studentIds,
+      teachers: teachers ?? this.teachers,
+      students: students ?? this.students,
       isPersonalClass: isPersonalClass ?? this.isPersonalClass,
       attendanceRecords: attendanceRecords ?? this.attendanceRecords,
     );
@@ -88,8 +89,8 @@ class ClassModel {
       'creatorId': this.creatorId,
       'className': this.className,
       'schoolId': this.schoolId,
-      'teacherIds': this.teacherIds,
-      'studentIds': this.studentIds,
+      'teachers': teachers.map((e) => e.toMap()).toList(),
+      'students': students.map((e) => e.toMap()).toList(),
       'isPersonalClass': this.isPersonalClass,
       'attendanceRecords': attendanceRecords?.map((e) => e.toMap()).toList(),
     };
@@ -101,8 +102,12 @@ class ClassModel {
       creatorId: map['creatorId'] as String,
       className: map['className'] as String,
       schoolId: map['schoolId'] as String?,
-      teacherIds: List<String>.from(map['teacherIds'] ?? []),
-      studentIds: List<String>.from(map['studentIds'] ?? []),
+      teachers: (map['teachers'] as List)
+          .map((e) => TeacherModel.fromMap(e))
+          .toList(),
+      students: (map['students'] as List)
+          .map((e) => StudentModel.fromMap(e))
+          .toList(),
       isPersonalClass: map['isPersonalClass'] as bool,
       attendanceRecords: map['attendanceRecords'] != null
           ? (map['attendanceRecords'] as List)
@@ -111,7 +116,4 @@ class ClassModel {
           : null,
     );
   }
-
-
-//</editor-fold>
 }

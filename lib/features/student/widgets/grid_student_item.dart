@@ -1,21 +1,21 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/constant.dart';
 import '../../../core/utils/app_text_style.dart';
+import '../model/student_model.dart';
 
 class GridStudentItem extends StatefulWidget {
-  final String? avatarUrl;
-  final String name;
-  final String value;
+  final StudentModel? student;  // Để student có thể nhận null
   final bool add;
+  final VoidCallback? onTapCallback;  // Thêm callback cho sự kiện nhấn
 
   const GridStudentItem({
-    Key? key,
-    this.avatarUrl,
-    required this.name,
-    required this.value,
+    super.key,
+    this.student,  // student có thể là null khi add = true
     this.add = false,
-  }) : super(key: key);
+    this.onTapCallback,  // Truyền callback
+  });
 
   @override
   State<GridStudentItem> createState() => _GridStudentItemState();
@@ -32,7 +32,7 @@ class _GridStudentItemState extends State<GridStudentItem>
       vsync: this,
       lowerBound: 0.95,
       upperBound: 1.0,
-      duration: const Duration(milliseconds: 200), // Add a duration for the animation
+      duration: const Duration(milliseconds: 200),
     );
   }
 
@@ -50,6 +50,9 @@ class _GridStudentItemState extends State<GridStudentItem>
       onTapCancel: () => _controller.forward(),
       onTap: () {
         print("Grid item tapped!");
+        if (widget.onTapCallback != null) {
+          widget.onTapCallback!();
+        }
       },
       child: ScaleTransition(
         scale: _controller,
@@ -66,8 +69,8 @@ class _GridStudentItemState extends State<GridStudentItem>
                   children: [
                     widget.add
                         ? Container(
-                      width: 48,
-                      height: 48,
+                      width: 60,
+                      height: 60,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
@@ -81,18 +84,22 @@ class _GridStudentItemState extends State<GridStudentItem>
                       ),
                     )
                         : CircleAvatar(
-                      radius: 24,
-                      backgroundImage: AssetImage(widget.avatarUrl ?? ''),
-                      onBackgroundImageError: (error, stackTrace) {
-                        print("Error loading image: $error");
-                      },
+
+                      backgroundImage: AssetImage(
+
+                        widget.student?.gender == 'Nam'
+                            ? 'assets/images/boy.jpg'
+                            : 'assets/images/girl.jpg',
+                      ),
+
+                      radius: 30,
                     ),
                     const SizedBox(height: kMarginSm),
                     Container(
                       height: 30,
                       alignment: Alignment.center,
                       child: Text(
-                        widget.add ? "Thêm mới" : widget.name,
+                        widget.add ? "Thêm mới" : widget.student?.name ?? '',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
@@ -113,7 +120,7 @@ class _GridStudentItemState extends State<GridStudentItem>
                     radius: 10,
                     backgroundColor: Colors.red,
                     child: Text(
-                      widget.value,
+                      'A',
                       style: AppTextStyle.semibold(10, kWhiteColor),
                     ),
                   ),

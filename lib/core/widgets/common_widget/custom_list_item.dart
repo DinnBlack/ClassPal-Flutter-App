@@ -15,7 +15,8 @@ class CustomListItem extends StatefulWidget {
   final bool? trailingIcon;
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
-  final Widget? customLeadingWidget;  // Thêm thuộc tính tùy chỉnh widget ở đầu
+  final Widget? customLeadingWidget;
+  final Widget? customTrailingWidget;
 
   const CustomListItem({
     super.key,
@@ -30,13 +31,15 @@ class CustomListItem extends StatefulWidget {
     this.titleStyle,
     this.subtitleStyle,
     this.customLeadingWidget,
+    this.customTrailingWidget,
   });
 
   @override
   State<CustomListItem> createState() => _CustomListItemState();
 }
 
-class _CustomListItemState extends State<CustomListItem> with SingleTickerProviderStateMixin {
+class _CustomListItemState extends State<CustomListItem>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -93,23 +96,21 @@ class _CustomListItemState extends State<CustomListItem> with SingleTickerProvid
               ),
               child: Row(
                 children: [
-                  // Nếu có customLeadingWidget thì sử dụng nó, nếu không sử dụng Image
                   widget.customLeadingWidget ??
                       (widget.imageUrl != null
                           ? ClipOval(
-                        child: Padding(
-                          padding: const EdgeInsets.all(kPaddingSm),
-                          child: Image.asset(
-                            widget.imageUrl!,
-                            fit: BoxFit.cover,
-                            width: 32,
-                            height: 32,
-                          ),
-                        ),
-                      )
+                              child: Image.asset(
+                                widget.imageUrl!,
+                                fit: BoxFit.cover,
+                                width: 40,
+                                height: 40,
+                              ),
+                            )
                           : SizedBox()),
 
-                  if (widget.imageUrl != null || widget.customLeadingWidget != null) const SizedBox(width: kMarginMd),
+                  if (widget.imageUrl != null ||
+                      widget.customLeadingWidget != null)
+                    const SizedBox(width: kMarginMd),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,12 +118,14 @@ class _CustomListItemState extends State<CustomListItem> with SingleTickerProvid
                         if (widget.title != null)
                           Text(
                             widget.title!,
-                            style: widget.titleStyle ?? AppTextStyle.semibold(kTextSizeSm),
+                            style: widget.titleStyle ??
+                                AppTextStyle.semibold(kTextSizeSm),
                           ),
                         if (widget.subtitle != null)
                           Text(
                             widget.subtitle!,
-                            style: widget.subtitleStyle ?? AppTextStyle.light(kTextSizeXs),
+                            style: widget.subtitleStyle ??
+                                AppTextStyle.light(kTextSizeXs),
                           ),
                       ],
                     ),
@@ -149,6 +152,8 @@ class _CustomListItemState extends State<CustomListItem> with SingleTickerProvid
                       FontAwesomeIcons.chevronRight,
                       size: 16,
                     ),
+                  if (widget.customTrailingWidget != null)
+                    widget.customTrailingWidget!,
                 ],
               ),
             ),

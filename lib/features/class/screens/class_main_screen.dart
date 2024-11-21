@@ -18,27 +18,33 @@ class ClassMainScreen extends StatefulWidget {
   const ClassMainScreen({super.key, required this.currentClass});
 
   @override
-  _ClassMainScreenState createState() => _ClassMainScreenState();
+  State<ClassMainScreen> createState() => _ClassMainScreenState();
 }
 
 class _ClassMainScreenState extends State<ClassMainScreen> {
-  final PageController _pageController = PageController();
+  late PageController _pageController;
   int _currentIndex = 0;
-
-  final ScrollController _scrollController = ScrollController();
 
   List<Widget> _pages = [];
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController(initialPage: _currentIndex);
 
     _pages = [
       ClassDashboardPage(classData: widget.currentClass),
       ClassBoardPage(classData: widget.currentClass),
+      const SizedBox.shrink(),
       ClassSchedulePage(classData: widget.currentClass),
       ClassMessagePage(classData: widget.currentClass),
     ];
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   void _onTabTapped(int index) {
@@ -53,7 +59,7 @@ class _ClassMainScreenState extends State<ClassMainScreen> {
     _pageController.animateToPage(
       index,
       duration: const Duration(milliseconds: 300),
-      curve: Curves.ease,
+      curve: Curves.easeInOut,
     );
   }
 
@@ -111,11 +117,7 @@ class _ClassMainScreenState extends State<ClassMainScreen> {
       backgroundColor: Colors.white,
       body: PageView(
         controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        physics: const NeverScrollableScrollPhysics(), // Ngăn cuộn bằng tay nếu không cần thiết
         children: _pages,
       ),
       bottomNavigationBar: BottomBarCreative(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart'; // Import the intl package
 import '../../constants/constant.dart';
 import '../../utils/app_text_style.dart';
 
@@ -13,6 +14,7 @@ class CustomTextField extends StatefulWidget {
   final Function(String)? onChanged;
   final bool autofocus;
   final String? defaultValue;
+  final bool isDateTimePicker; // New parameter to handle date picker
 
   const CustomTextField({
     super.key,
@@ -25,6 +27,7 @@ class CustomTextField extends StatefulWidget {
     this.onChanged,
     this.autofocus = false,
     this.defaultValue,
+    this.isDateTimePicker = false, // Default is false
   });
 
   @override
@@ -60,7 +63,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _focusNode.dispose();
     super.dispose();
   }
-
   void _showOptionsDialog() {
     showDialog(
       context: context,
@@ -85,18 +87,20 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     child: Center(
                       child: Text(
                         widget.options![index],
-                        style: AppTextStyle.medium(
-                          kTextSizeMd,
-                        ),
+                        style: AppTextStyle.medium(kTextSizeMd),
                       ),
                     ),
                   ),
                   onTap: () {
                     setState(() {
+                      // Update _selectedOption when user selects an option
                       _selectedOption = widget.options![index];
+                      // Update the controller text with the selected option
+                      widget.controller?.text = _selectedOption;
                     });
                     if (widget.onChanged != null) {
-                      widget.onChanged!(widget.options![index]);
+                      // Call onChanged to pass the selected value
+                      widget.onChanged!(_selectedOption);
                     }
                     Navigator.pop(context);
                   },
@@ -109,6 +113,26 @@ class _CustomTextFieldState extends State<CustomTextField> {
     );
   }
 
+
+  Future<void> _selectDate() async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate != null) {
+      // Format the picked date to dd/MM/yyyy
+      String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+      widget.controller?.text = formattedDate;
+
+      if (widget.onChanged != null) {
+        widget.onChanged!(formattedDate); // Pass the formatted date to onChanged
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isOptionMode = widget.options != null;
@@ -119,10 +143,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
         controller: widget.controller,
         focusNode: _focusNode,
         autofocus: widget.autofocus,
-        keyboardType:
-        widget.isNumber ? TextInputType.number : TextInputType.text,
+        keyboardType: widget.isNumber ? TextInputType.number : TextInputType.text,
         obscureText: widget.isPassword && _isObscured,
-        readOnly: isOptionMode,
+        readOnly: isOptionMode || widget.isDateTimePicker, // Make text field readonly if options or date picker
         decoration: InputDecoration(
           labelText: widget.text?.isNotEmpty == true ? widget.text : null,
           labelStyle: AppTextStyle.light(kTextSizeMd, kGreyColor),
@@ -167,9 +190,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
           )
               : null),
         ),
-        onTap: isOptionMode ? _showOptionsDialog : null,
-        inputFormatters:
-        widget.isNumber ? [FilteringTextInputFormatter.digitsOnly] : null,
+        onTap: widget.isDateTimePicker ? _selectDate : (isOptionMode ? _showOptionsDialog : null),
+        inputFormatters: widget.isNumber ? [FilteringTextInputFormatter.digitsOnly] : null,
       ),
     );
   }
