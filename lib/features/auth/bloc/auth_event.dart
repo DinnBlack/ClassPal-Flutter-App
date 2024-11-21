@@ -24,14 +24,12 @@ class AuthRegisterStarted extends AuthEvent {
   final String name;
   final String email;
   final String password;
-  final String role;
   final String gender;
 
   AuthRegisterStarted({
     required this.name,
     required this.email,
     required this.password,
-    required this.role,
     required this.gender,
   });
 }

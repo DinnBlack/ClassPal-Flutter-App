@@ -204,9 +204,6 @@ class _AuthScreenState extends State<AuthScreen> {
                               setState(() {
                                 _selectedMode = 'Đăng nhập';
                               });
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Đăng ký thành công!")),
-                              );
                             } else if (state is AuthLoginFailure || state is AuthRegisterFailure) {
                               LoadingDialog.hideLoadingDialog(context);
                             }
@@ -217,19 +214,12 @@ class _AuthScreenState extends State<AuthScreen> {
                               isDisabled: state is AuthLoginInProgress || ! _isFormValid(),
                               onPressed: () {
                                 if (_selectedMode == "Đăng ký") {
-                                  if (_gender == null) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text("Vui lòng chọn giới tính")),
-                                    );
-                                    return;
-                                  }
                                   context.read<AuthBloc>().add(
                                     AuthRegisterStarted(
                                       name: _nameController.text,
                                       email: _phoneOrEmailController.text,
                                       password: _passwordController.text,
                                       gender: _gender,
-                                      role: _role!,
                                     ),
                                   );
                                 } else {

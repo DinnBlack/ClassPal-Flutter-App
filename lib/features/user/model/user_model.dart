@@ -3,10 +3,9 @@ class UserModel {
   String name;
   String email;
   String password;
-  String role;
   String gender;
-  List<String> schoolsIds;
-  List<String> classesIds;
+  List<String>? schoolsIds;
+  List<String>? classesIds;
   List<String>? childrenIds;
 
 //<editor-fold desc="Data Methods">
@@ -15,7 +14,6 @@ class UserModel {
     required this.name,
     required this.email,
     required this.password,
-    required this.role,
     required this.gender,
     required this.schoolsIds,
     required this.classesIds,
@@ -31,7 +29,6 @@ class UserModel {
           name == other.name &&
           email == other.email &&
           password == other.password &&
-          role == other.role &&
           gender == other.gender &&
           schoolsIds == other.schoolsIds &&
           classesIds == other.classesIds &&
@@ -43,7 +40,6 @@ class UserModel {
       name.hashCode ^
       email.hashCode ^
       password.hashCode ^
-      role.hashCode ^
       gender.hashCode ^
       schoolsIds.hashCode ^
       classesIds.hashCode ^
@@ -56,7 +52,6 @@ class UserModel {
         ' name: $name,' +
         ' email: $email,' +
         ' password: $password,' +
-        ' role: $role,' +
         ' gender: $gender,' +
         ' schoolsIds: $schoolsIds,' +
         ' classesIds: $classesIds,' +
@@ -69,7 +64,6 @@ class UserModel {
     String? name,
     String? email,
     String? password,
-    String? role,
     String? gender,
     List<String>? schoolsIds,
     List<String>? classesIds,
@@ -80,7 +74,6 @@ class UserModel {
       name: name ?? this.name,
       email: email ?? this.email,
       password: password ?? this.password,
-      role: role ?? this.role,
       gender: gender ?? this.gender,
       schoolsIds: schoolsIds ?? this.schoolsIds,
       classesIds: classesIds ?? this.classesIds,
@@ -94,7 +87,6 @@ class UserModel {
       'name': this.name,
       'email': this.email,
       'password': this.password,
-      'role': this.role,
       'gender': this.gender,
       'schoolsIds': this.schoolsIds,
       'classesIds': this.classesIds,
@@ -108,7 +100,6 @@ class UserModel {
       name: map['name'] as String,
       email: map['email'] as String,
       password: map['password'] as String,
-      role: map['role'] as String,
       gender: map['gender'] as String,
       schoolsIds: List<String>.from(map['schoolsIds'] ?? []),
       classesIds: List<String>.from(map['classesIds'] ?? []),

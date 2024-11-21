@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_class_pal/features/auth/data/auth_firebase.dart';
 import 'package:flutter_class_pal/features/auth/screens/auth_select_role/select_role_screen.dart';
+import 'package:flutter_class_pal/features/class/bloc/class_bloc.dart';
+import 'package:flutter_class_pal/features/class/data/class_firebase.dart';
 import 'package:flutter_class_pal/features/user/data/user_firebase.dart';
 import 'package:flutter_class_pal/routes/routes.dart';
-import 'package:flutter_class_pal/screens/main_screen.dart';
 
 import 'core/services/firebase/firebase_option.dart';
 import 'core/themes/theme.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => AuthBloc(AuthFirebase())),
         BlocProvider(create: (context) => UserBloc(UserFirebase())),
+        BlocProvider(create: (context) => ClassBloc(ClassFirebase())),
       ],
       child: MaterialApp(
         title: 'ClassPal',

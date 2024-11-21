@@ -1,20 +1,21 @@
 import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:awesome_bottom_bar/tab_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_class_pal/features/class/model/class_model.dart';
 import 'package:flutter_class_pal/features/class/screens/class_page/class_dashboard_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/constants/constant.dart';
 import '../../../core/utils/app_text_style.dart';
-import '../../../core/widgets/common_widget/custom_app_bar.dart';
 import 'class_page/class_schedule_page.dart';
 import 'class_page/message_page_screen.dart';
 import 'class_page/class_board_page.dart';
 
 class ClassMainScreen extends StatefulWidget {
   static const route = 'ClassMainScreen';
+  final ClassModel currentClass;
 
-  const ClassMainScreen({super.key});
+  const ClassMainScreen({super.key, required this.currentClass});
 
   @override
   _ClassMainScreenState createState() => _ClassMainScreenState();
@@ -25,6 +26,20 @@ class _ClassMainScreenState extends State<ClassMainScreen> {
   int _currentIndex = 0;
 
   final ScrollController _scrollController = ScrollController();
+
+  List<Widget> _pages = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _pages = [
+      ClassDashboardPage(classData: widget.currentClass),
+      ClassBoardPage(classData: widget.currentClass),
+      ClassSchedulePage(classData: widget.currentClass),
+      ClassMessagePage(classData: widget.currentClass),
+    ];
+  }
 
   void _onTabTapped(int index) {
     if (index == 2) {
@@ -41,13 +56,6 @@ class _ClassMainScreenState extends State<ClassMainScreen> {
       curve: Curves.ease,
     );
   }
-
-  final List<Widget> _pages = [
-    const ClassDashboardPage(),
-    const ClassBoardPage(),
-    const ClassSchedulePage(),
-    const ClassMessagePage(),
-  ];
 
   static const List<TabItem> items = [
     TabItem(
@@ -101,7 +109,6 @@ class _ClassMainScreenState extends State<ClassMainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
@@ -118,7 +125,7 @@ class _ClassMainScreenState extends State<ClassMainScreen> {
         colorSelected: kPrimaryColor,
         indexSelected: _currentIndex,
         titleStyle: AppTextStyle.medium(10),
-        onTap: _onTabTapped, 
+        onTap: _onTabTapped,
       ),
     );
   }

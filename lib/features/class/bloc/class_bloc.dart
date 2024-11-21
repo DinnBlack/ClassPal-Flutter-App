@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
 import '../../../core/state/app_state.dart';
-import '../../../core/utils/id_generator.dart';
 import '../data/class_firebase.dart';
 import '../model/class_model.dart';
 
@@ -16,6 +15,12 @@ class ClassBloc extends Bloc<ClassEvent, ClassState> {
   ClassBloc(this._classFirebase) : super(ClassInitial()) {
     on<ClassCreateStarted>(_onClassCreateStarted);
     on<ClassFetchStarted>(_onClassFetchStarted);
+    on<ClassResetStarted>(_onClassResetStarted);
+  }
+
+  Future<void> _onClassResetStarted(
+      ClassResetStarted event, Emitter<ClassState> emit) async {
+    emit(ClassInitial());
   }
 
   Future<void> _onClassCreateStarted(
@@ -29,9 +34,9 @@ class ClassBloc extends Bloc<ClassEvent, ClassState> {
       }
 
       ClassModel newClass = ClassModel(
-        classId: generateClassId(),
-        className: "New Class",
-        schoolId: currentUser.schoolsIds.first,
+        classId: '',
+        className: event.className,
+        schoolId: '',
         teacherIds: [currentUser.userId],
         studentIds: [],
         creatorId: currentUser.userId,
@@ -41,8 +46,10 @@ class ClassBloc extends Bloc<ClassEvent, ClassState> {
       String classId = await _classFirebase.createClass(newClass);
       if (classId.isNotEmpty) {
         emit(ClassCreateSuccess());
+        emit(ClassInitial());
       } else {
         emit(ClassCreateFailure());
+        emit(ClassInitial());
       }
     } catch (e) {
       print("Error creating class: $e");
@@ -55,18 +62,17 @@ class ClassBloc extends Bloc<ClassEvent, ClassState> {
     emit(ClassFetchInProgress());
     try {
       var currentUser = AppState.getUser();
+      print(currentUser);
       if (currentUser == null) {
         emit(ClassFetchFailure());
         return;
       }
 
       List<ClassModel> classes = await _classFirebase.fetchClasses();
+      print(classes);
 
-      if (classes.isNotEmpty) {
-        emit(ClassFetchSuccess(classes));
-      } else {
-        emit(ClassFetchFailure());
-      }
+      emit(ClassFetchSuccess(classes));
+
     } catch (e) {
       print("Error fetching classes: $e");
       emit(ClassFetchFailure());

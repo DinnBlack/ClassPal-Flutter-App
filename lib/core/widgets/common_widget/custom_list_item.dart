@@ -29,7 +29,7 @@ class CustomListItem extends StatefulWidget {
     this.trailingIcon = false,
     this.titleStyle,
     this.subtitleStyle,
-    this.customLeadingWidget,  // Thêm tham số này
+    this.customLeadingWidget,
   });
 
   @override

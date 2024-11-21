@@ -4,10 +4,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/constants/constant.dart';
 import '../../../../core/utils/app_text_style.dart';
 import '../../../../core/widgets/common_widget/custom_app_bar.dart';
+import '../../model/class_model.dart';
 
 class ClassBoardPage extends StatelessWidget {
   static const route = 'ClassBoardPage';
-  const ClassBoardPage({super.key});
+  final ClassModel classData;
+  const ClassBoardPage({super.key, required this.classData});
 
   @override
   Widget build(BuildContext context) {

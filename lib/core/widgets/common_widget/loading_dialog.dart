@@ -1,6 +1,5 @@
-// lib/widgets/loading_dialog.dart
+
 import 'package:flutter/material.dart';
-import 'package:flutter_class_pal/core/constants/constant.dart';
 import 'package:lottie/lottie.dart';
 
 class LoadingDialog extends StatelessWidget {

@@ -8,11 +8,13 @@ import '../../../../core/widgets/common_widget/custom_app_bar.dart';
 import '../../../../core/widgets/common_widget/custom_tab_bar.dart';
 import '../../../student/screens/student_group/student_group_screen.dart';
 import '../../../student/screens/student_list/student_list_screen.dart';
+import '../../model/class_model.dart';
 
 class ClassDashboardPage extends StatefulWidget {
   static const route = "ClassDashboardPage";
+  final ClassModel classData;
 
-  const ClassDashboardPage({super.key});
+  const ClassDashboardPage({super.key, required this.classData});
 
   @override
   State<ClassDashboardPage> createState() => _ClassDashboardPageState();
@@ -140,7 +142,7 @@ class _ClassDashboardPageState extends State<ClassDashboardPage> {
     return Scaffold(
       backgroundColor: kBackgroundColor,
       appBar: CustomAppBar(
-        title: 'Lớp 9a3',
+        title: widget.classData.className,
         leading: const FaIcon(
           FontAwesomeIcons.arrowLeft,
           size: 20,

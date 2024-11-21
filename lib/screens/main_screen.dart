@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_class_pal/core/state/app_state.dart';
 import 'package:flutter_class_pal/core/widgets/common_widget/custom_button.dart';
+import 'package:flutter_class_pal/core/widgets/common_widget/loading_dialog.dart';
 import 'package:flutter_class_pal/features/user/model/user_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:iconsax/iconsax.dart';
 
 import '../core/constants/constant.dart';
 import '../core/utils/app_text_style.dart';
 import '../core/widgets/common_widget/custom_app_bar.dart';
 import '../core/widgets/common_widget/custom_list_item.dart';
+import '../features/class/bloc/class_bloc.dart';
+import '../features/class/screens/class_create/class_create_screen.dart';
 import '../features/class/screens/class_main_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -22,6 +25,12 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final UserModel? currentUser = AppState.getUser();
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<ClassBloc>(context).add(ClassFetchStarted());
+  }
 
   void showTopSheet(BuildContext context) {
     showGeneralDialog(
@@ -39,7 +48,7 @@ class _MainScreenState extends State<MainScreen> {
               width: double.infinity,
               margin: const EdgeInsets.only(top: 0),
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color: kWhiteColor,
                 borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(kBorderRadiusMd),
                 ),
@@ -57,10 +66,8 @@ class _MainScreenState extends State<MainScreen> {
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0, -1),
-            end: Offset.zero,
-          ).animate(animation),
+          position: Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero)
+              .animate(animation),
           child: child,
         );
       },
@@ -72,23 +79,28 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: kBackgroundColor,
       appBar: CustomAppBar(
-        leading: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircleAvatar(
-              radius: 16,
-              backgroundColor: kPrimaryColor,
-              child: FaIcon(
-                FontAwesomeIcons.solidUser,
-                size: 18,
+        leading: GestureDetector(
+          onTap: () {
+            BlocProvider.of<ClassBloc>(context).add(ClassFetchStarted());
+          },
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: kPrimaryColor,
+                child: FaIcon(
+                  FontAwesomeIcons.solidUser,
+                  size: 18,
+                ),
               ),
-            ),
-            SizedBox(width: kMarginSm),
-            FaIcon(
-              FontAwesomeIcons.chevronDown,
-              size: 14,
-            ),
-          ],
+              SizedBox(width: kMarginSm),
+              FaIcon(
+                FontAwesomeIcons.chevronDown,
+                size: 14,
+              ),
+            ],
+          ),
         ),
         onLeadingTap: () {
           print("Menu tapped");
@@ -109,91 +121,182 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(kPaddingMd),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Xin chào",
-            style: AppTextStyle.semibold(kTextSizeMd, kGreyColor),
-          ),
-          Text(
-            "${currentUser?.gender} ${currentUser?.name}",
-            style: AppTextStyle.semibold(kTextSizeXl),
-          ),
-          const SizedBox(
-            height: kMarginXl,
-          ),
-          Text(
-            "Trường học",
-            style: AppTextStyle.semibold(kTextSizeMd),
-          ),
-          const SizedBox(
-            height: kMarginMd,
-          ),
-          // Kiểm tra xem người dùng đã có trường học hay chưa
-          if (currentUser?.schoolsIds == null ||
-              currentUser?.schoolsIds?.isEmpty == true)
-            CustomButton(
-              text: 'Thêm trường học',
-              textStyle: AppTextStyle.medium(kTextSizeMd, kWhiteColor),
-              icon: FontAwesomeIcons.plus,
+    return BlocConsumer<ClassBloc, ClassState>(
+      listener: (context, state) {
+        if (state is ClassFetchFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to fetch classes')),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is ClassFetchInProgress) {
+          return const LoadingDialog();
+        }
+
+        if (state is ClassFetchSuccess) {
+          var classes = state.classes;
+          return Padding(
+            padding: const EdgeInsets.all(kPaddingMd),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Xin chào",
+                  style: AppTextStyle.semibold(kTextSizeMd, kGreyColor),
+                ),
+                Text(
+                  "${currentUser?.gender} ${currentUser?.name}",
+                  style: AppTextStyle.semibold(kTextSizeXl),
+                ),
+                const SizedBox(
+                  height: kMarginXl,
+                ),
+                Text(
+                  "Trường học",
+                  style: AppTextStyle.semibold(kTextSizeMd),
+                ),
+                const SizedBox(
+                  height: kMarginMd,
+                ),
+                if (currentUser?.schoolsIds == null ||
+                    currentUser?.schoolsIds?.isEmpty == true)
+                  CustomListItem(
+                    title: 'Thêm trường',
+                    titleStyle:
+                        AppTextStyle.semibold(kTextSizeMd, kPrimaryColor),
+                    customLeadingWidget: Container(
+                      width: 32.0,
+                      height: 32.0,
+                      decoration: const BoxDecoration(
+                        color: kPrimaryColor,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.add,
+                        color: kWhiteColor,
+                        size: 18.0,
+                      ),
+                    ),
+                  ),
+                const SizedBox(
+                  height: kMarginMd,
+                ),
+                Text(
+                  "Lớp học",
+                  style: AppTextStyle.semibold(kTextSizeMd),
+                ),
+                const SizedBox(
+                  height: kMarginMd,
+                ),
+                if (classes.isNotEmpty)
+                  Column(
+                    children: classes
+                        .map(
+                          (classItem) => CustomListItem(
+                            imageUrl: 'assets/images/class.png',
+                            title: classItem.className,
+                            subtitle: classItem.teacherIds.join(", "),
+                            textColor: Colors.black,
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                ClassMainScreen.route,
+                                arguments: classItem,
+                              );
+                            },
+                            trailingIcon: true,
+                          ),
+                        )
+                        .toList(),
+                  ),
+                CustomListItem(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) {
+                        return const FractionallySizedBox(
+                          alignment: Alignment.bottomCenter,
+                          heightFactor: 0.95,
+                          child: ClassCreateScreen(),
+                        );
+                      },
+                    );
+                  },
+                  title: 'Thêm lớp',
+                  titleStyle: AppTextStyle.semibold(kTextSizeMd, kPrimaryColor),
+                  customLeadingWidget: Container(
+                    width: 32.0,
+                    height: 32.0,
+                    decoration: const BoxDecoration(
+                      color: kPrimaryColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.add,
+                      color: kWhiteColor,
+                      size: 18.0,
+                    ),
+                  ),
+                ),
+                CustomListItem(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) {
+                        return const FractionallySizedBox(
+                          alignment: Alignment.bottomCenter,
+                          heightFactor: 0.95,
+                          child: ClassCreateScreen(),
+                        );
+                      },
+                    );
+                  },
+                  title: 'Tham gia lớp',
+                  titleStyle: AppTextStyle.semibold(
+                      kTextSizeMd, const Color(0xFF10B1E8)),
+                  customLeadingWidget: Container(
+                    width: 32.0,
+                    height: 32.0,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF10B1E8),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      FontAwesomeIcons.userTie,
+                      color: kWhiteColor,
+                      size: 18.0,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: kMarginMd,
+                ),
+                Text(
+                  "Lớp học cá nhân",
+                  style: AppTextStyle.semibold(kTextSizeMd),
+                ),
+              ],
             ),
-          // Nếu người dùng đã có trường học, hiển thị thông tin trường học
-          if (currentUser?.schoolsIds != null &&
-              currentUser?.schoolsIds?.isNotEmpty == true)
-            CustomListItem(
-              imageUrl: 'assets/images/school.png',
-              title: currentUser?.schoolsIds[0] ?? 'Trường học không có',
-              subtitle: 'Flutter Developer',
-              textColor: Colors.black,
-              onTap: () {
-                print('Item tapped!');
-              },
-              leadingIcon: Iconsax.information5,
-              trailingIcon: true,
+          );
+        } else if (state is ClassFetchFailure) {
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error, color: Colors.red),
+                SizedBox(height: 8),
+                Text('Failed to load classes'),
+              ],
             ),
-          const SizedBox(
-            height: kMarginMd,
-          ),
-          Text(
-            "Các lớp học của bạn",
-            style: AppTextStyle.semibold(kTextSizeMd),
-          ),
-          const SizedBox(
-            height: kMarginMd,
-          ),
-          // Kiểm tra xem người dùng đã có lớp học hay chưa
-          if (currentUser?.classesIds == null ||
-              currentUser?.classesIds?.isEmpty == true)
-            CustomButton(
-              text: 'Thêm lớp học',
-              textStyle: AppTextStyle.medium(kTextSizeMd, kWhiteColor),
-              icon: FontAwesomeIcons.plus,
-            ),
-          // Nếu người dùng đã có lớp học, hiển thị thông tin lớp học
-          if (currentUser?.classesIds != null &&
-              currentUser?.classesIds?.isNotEmpty == true)
-            CustomListItem(
-              imageUrl: 'assets/images/class.png',
-              title: 'Lớp 9a2',
-              // Cập nhật lại theo thông tin lớp học từ currentUser
-              textColor: Colors.black,
-              onTap: () {
-                Navigator.pushNamed(context, ClassMainScreen.route);
-              },
-              trailingIcon: true,
-            ),
-          const SizedBox(
-            height: kMarginMd,
-          ),
-          Text(
-            "Lớp học cá nhân",
-            style: AppTextStyle.semibold(kTextSizeMd),
-          ),
-        ],
-      ),
+          );
+        }
+
+        // Default state when nothing is loaded yet
+        return const Center(child: Text('No data available'));
+      },
     );
   }
 }
