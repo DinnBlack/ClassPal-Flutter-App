@@ -1,3 +1,4 @@
+import '../../student/model/student_group_model.dart';
 import '../../student/model/student_model.dart';
 import '../../teacher/model/teacher_model.dart';
 import 'attendance_record_model.dart';
@@ -11,6 +12,7 @@ class ClassModel {
   List<StudentModel> students;
   bool isPersonalClass;
   final List<AttendanceRecordModel>? attendanceRecords;
+  final List<StudentGroupModel>? groups;
 
   ClassModel({
     required this.classId,
@@ -21,21 +23,23 @@ class ClassModel {
     required this.students,
     required this.isPersonalClass,
     this.attendanceRecords,
+    this.groups,
   });
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          (other is ClassModel &&
-              runtimeType == other.runtimeType &&
-              classId == other.classId &&
-              creatorId == other.creatorId &&
-              className == other.className &&
-              schoolId == other.schoolId &&
-              teachers == other.teachers &&
-              students == other.students &&
-              isPersonalClass == other.isPersonalClass &&
-              attendanceRecords == other.attendanceRecords);
+      (other is ClassModel &&
+          runtimeType == other.runtimeType &&
+          classId == other.classId &&
+          creatorId == other.creatorId &&
+          className == other.className &&
+          schoolId == other.schoolId &&
+          teachers == other.teachers &&
+          students == other.students &&
+          isPersonalClass == other.isPersonalClass &&
+          attendanceRecords == other.attendanceRecords &&
+          groups == other.groups);
 
   @override
   int get hashCode =>
@@ -46,7 +50,8 @@ class ClassModel {
       teachers.hashCode ^
       students.hashCode ^
       isPersonalClass.hashCode ^
-      (attendanceRecords?.hashCode ?? 0);
+      (attendanceRecords?.hashCode ?? 0) ^
+      groups.hashCode; // Thêm groups vào hashCode
 
   @override
   String toString() {
@@ -58,6 +63,7 @@ class ClassModel {
         ' teachers: $teachers,' +
         ' students: $students,' +
         ' isPersonalClass: $isPersonalClass,' +
+        ' groups: $groups,' +
         '}';
   }
 
@@ -70,6 +76,7 @@ class ClassModel {
     List<StudentModel>? students,
     bool? isPersonalClass,
     List<AttendanceRecordModel>? attendanceRecords,
+    List<StudentGroupModel>? groups,
   }) {
     return ClassModel(
       classId: classId ?? this.classId,
@@ -80,6 +87,7 @@ class ClassModel {
       students: students ?? this.students,
       isPersonalClass: isPersonalClass ?? this.isPersonalClass,
       attendanceRecords: attendanceRecords ?? this.attendanceRecords,
+      groups: groups ?? this.groups,
     );
   }
 
@@ -93,27 +101,37 @@ class ClassModel {
       'students': students.map((e) => e.toMap()).toList(),
       'isPersonalClass': this.isPersonalClass,
       'attendanceRecords': attendanceRecords?.map((e) => e.toMap()).toList(),
+      'groups': groups?.map((e) => e.toMap()).toList(),
     };
   }
 
   factory ClassModel.fromMap(Map<String, dynamic> map) {
+    print("Raw groups data: ${map['groups']}"); // Debug giá trị groups
     return ClassModel(
       classId: map['classId'] as String,
       creatorId: map['creatorId'] as String,
       className: map['className'] as String,
       schoolId: map['schoolId'] as String?,
-      teachers: (map['teachers'] as List)
-          .map((e) => TeacherModel.fromMap(e))
-          .toList(),
-      students: (map['students'] as List)
-          .map((e) => StudentModel.fromMap(e))
-          .toList(),
+      teachers: (map['teachers'] as List<dynamic>?)
+              ?.map((e) => TeacherModel.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      students: (map['students'] as List<dynamic>?)
+              ?.map((e) => StudentModel.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       isPersonalClass: map['isPersonalClass'] as bool,
       attendanceRecords: map['attendanceRecords'] != null
-          ? (map['attendanceRecords'] as List)
-          .map((e) => AttendanceRecordModel.fromMap(e))
-          .toList()
-          : null,
+          ? (map['attendanceRecords'] as List<dynamic>)
+              .map((e) =>
+                  AttendanceRecordModel.fromMap(e as Map<String, dynamic>))
+              .toList()
+          : [],
+      groups: map['groups'] != null
+          ? (map['groups'] as List<dynamic>)
+              .map((e) => StudentGroupModel.fromMap(e as Map<String, dynamic>))
+              .toList()
+          : [],
     );
   }
 }

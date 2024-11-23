@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter_class_pal/core/state/app_state.dart';
 import 'package:flutter_class_pal/features/student/model/student_model.dart';
 import 'package:meta/meta.dart';
 
-import '../../../core/utils/id_generator.dart';
-import '../data/student_firebase.dart';
+import '../../../../core/utils/id_generator.dart';
+import '../../data/student_firebase.dart';
 
 part 'student_event.dart';
 
@@ -16,7 +15,7 @@ part 'student_state.dart';
 class StudentBloc extends Bloc<StudentEvent, StudentState> {
   final StudentFirebase _studentFirebase;
   final StreamController<void> _fetchStreamController =
-      StreamController<void>.broadcast();
+  StreamController<void>.broadcast();
 
   Stream<void> get fetchStream => _fetchStreamController.stream;
 
@@ -24,15 +23,16 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     on<StudentCreateStarted>(_onStudentCreateStarted);
     on<StudentFetchStarted>(_onStudentFetchStarted);
     on<StudentResetStarted>(_onStudentResetStarted);
+    on<StudentFetchWithoutGroupStarted>(_onStudentFetchWithoutGroupStarted);
   }
 
-  Future<void> _onStudentResetStarted(
-      StudentResetStarted event, Emitter<StudentState> emit) async {
+  Future<void> _onStudentResetStarted(StudentResetStarted event,
+      Emitter<StudentState> emit) async {
     emit(StudentInitial());
   }
 
-  Future<void> _onStudentCreateStarted(
-      StudentCreateStarted event, Emitter<StudentState> emit) async {
+  Future<void> _onStudentCreateStarted(StudentCreateStarted event,
+      Emitter<StudentState> emit) async {
     try {
       emit(StudentCreateInProgress());
       StudentModel newStudent = StudentModel(
@@ -58,17 +58,33 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     }
   }
 
-  Future<void> _onStudentFetchStarted(
-      StudentFetchStarted event, Emitter<StudentState> emit) async {
+  Future<void> _onStudentFetchStarted(StudentFetchStarted event,
+      Emitter<StudentState> emit) async {
     try {
       emit(StudentFetchInProgress());
       List<StudentModel> students =
-          await _studentFirebase.fetchStudents(AppState.getClass()!.classId);
+      await _studentFirebase.fetchStudents(AppState.getClass()!.classId);
 
       if (students.isNotEmpty) {
         emit(StudentFetchSuccess(students: students));
       } else {
         emit(StudentFetchFailure(error: "No students found"));
+      }
+    } catch (e) {
+      emit(StudentFetchFailure(error: e.toString()));
+    }
+  }
+
+  Future<void> _onStudentFetchWithoutGroupStarted(
+      StudentFetchWithoutGroupStarted event, Emitter<StudentState> emit) async {
+    try {
+      // Fetch students without a group
+      List<StudentModel> students = await _studentFirebase.fetchStudentsWithoutGroup();
+
+      if (students.isNotEmpty) {
+        emit(StudentFetchSuccess(students: students));
+      } else {
+        emit(StudentFetchFailure(error: "No students found without a group"));
       }
     } catch (e) {
       emit(StudentFetchFailure(error: e.toString()));

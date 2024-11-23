@@ -220,7 +220,7 @@ class _ClassDashboardPageState extends State<ClassDashboardPage> {
             },
             children: [
               StudentListScreen(),
-              const StudentGroupScreen(),
+               StudentGroupListScreen(),
             ],
           ),
         ),

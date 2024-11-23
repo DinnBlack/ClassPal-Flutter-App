@@ -52,6 +52,7 @@ dependencies:
   image_picker: ^1.1.2
   permission_handler: ^11.3.1
   firebase_storage: ^12.3.6
+  diacritic: ^0.1.6
 
 dev_dependencies:
   flutter_test:

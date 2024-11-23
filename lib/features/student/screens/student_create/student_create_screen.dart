@@ -12,7 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/state/app_state.dart';
 import '../../../../core/widgets/common_widget/loading_dialog.dart';
 import '../../../../core/widgets/normal_widget/custom_button_camera.dart';
-import '../../bloc/student_bloc.dart';
+import '../../bloc/student/student_bloc.dart';
 
 class StudentCreateScreen extends StatefulWidget {
   const StudentCreateScreen({super.key});

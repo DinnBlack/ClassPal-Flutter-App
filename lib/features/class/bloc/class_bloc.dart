@@ -48,6 +48,7 @@ class ClassBloc extends Bloc<ClassEvent, ClassState> {
         isPersonalClass: false,
         students: [],
         teachers: [TeacherModel(uid: currentUser.userId, role: 'Giáo viên')],
+        groups: [],
       );
 
       String classId = await _classFirebase.createClass(newClass);

@@ -164,6 +164,39 @@ class _MainScreenState extends State<MainScreen> {
                           ),
                         ),
                       ),
+                    CustomListItem(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return const FractionallySizedBox(
+                              alignment: Alignment.bottomCenter,
+                              heightFactor: 0.95,
+                              child: ClassCreateScreen(),
+                            );
+                          },
+                        );
+                      },
+                      title: 'Tham gia lớp',
+                      titleStyle: AppTextStyle.semibold(
+                        kTextSizeSm,
+                        kBlueColor,
+                      ),
+                      customLeadingWidget: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF10B1E8),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          FontAwesomeIcons.userTie,
+                          color: kWhiteColor,
+                          size: 24,
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: kMarginMd),
                     Text("Lớp học của bạn",
                         style: AppTextStyle.semibold(kTextSizeMd)),

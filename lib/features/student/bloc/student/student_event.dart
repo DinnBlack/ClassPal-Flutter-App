@@ -20,3 +20,5 @@ class StudentCreateStarted extends StudentEvent {
 }
 
 class StudentFetchStarted extends StudentEvent {}
+
+class StudentFetchWithoutGroupStarted   extends StudentEvent  {}
