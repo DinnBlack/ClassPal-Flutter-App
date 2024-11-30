@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_class_pal/core/widgets/common_widget/custom_list_item.dart';
+import 'package:flutter_class_pal/features/class/screens/class_connect/class_connect_screen.dart';
+import 'package:flutter_class_pal/features/class/screens/class_connect/class_connect_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../core/constants/constant.dart';
@@ -53,7 +55,20 @@ class _ClassDashboardPageState extends State<ClassDashboardPage> {
               CustomListItem(
                 title: 'Kết nối phụ huynh',
                 titleStyle: AppTextStyle.medium(kTextSizeSm),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) {
+                      return const FractionallySizedBox(
+                        alignment: Alignment.bottomCenter,
+                        heightFactor: 0.95,
+                        child: ClassConnectScreen(),
+                      );
+                    },
+                  );
+                },
                 customLeadingWidget: const FaIcon(
                   FontAwesomeIcons.paperclip,
                   size: 18,
@@ -65,7 +80,20 @@ class _ClassDashboardPageState extends State<ClassDashboardPage> {
               CustomListItem(
                 title: 'Thêm giáo viên',
                 titleStyle: AppTextStyle.medium(kTextSizeSm),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) {
+                      return const FractionallySizedBox(
+                        alignment: Alignment.bottomCenter,
+                        heightFactor: 0.95,
+                        child: ClassConnectScreen(),
+                      );
+                    },
+                  );
+                },
                 customLeadingWidget: const FaIcon(
                   FontAwesomeIcons.userPlus,
                   size: 18,
@@ -168,40 +196,45 @@ class _ClassDashboardPageState extends State<ClassDashboardPage> {
               child: Padding(
                 padding: const EdgeInsets.only(right: kPaddingMd),
                 child: GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) {
-                        return const ClipRRect(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(kBorderRadiusMd),
-                          ),
-                          child: FractionallySizedBox(
-                            alignment: Alignment.bottomCenter,
-                            heightFactor: 0.95,
-                            child: ClassAttendanceScreen(),
-                          ),
-                        );
-                      },
-                    );
-
-                  },
+                  onTap: _currentIndex == 1 // Disable button if on "NHÓM" page
+                      ? null
+                      : () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) {
+                              return const ClipRRect(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(kBorderRadiusMd)),
+                                child: FractionallySizedBox(
+                                  alignment: Alignment.bottomCenter,
+                                  heightFactor: 0.95,
+                                  child: ClassAttendanceScreen(),
+                                ),
+                              );
+                            },
+                          );
+                        },
                   child: Container(
                     width: 35,
                     height: 35,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(kBorderRadiusMd),
                       border: Border.all(
-                        color: kGreyColor,
+                        color: _currentIndex == 1
+                            ? kGreyColor.withOpacity(0.5)
+                            : kPrimaryColor,
                         width: 1,
                       ),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: FaIcon(
                         FontAwesomeIcons.childReaching,
                         size: 16,
-                        color: kGreyColor,
+                        color: _currentIndex == 1
+                            ? kGreyColor.withOpacity(0.5)
+                            : kPrimaryColor,
                       ),
                     ),
                   ),
@@ -219,8 +252,8 @@ class _ClassDashboardPageState extends State<ClassDashboardPage> {
               });
             },
             children: [
-              StudentListScreen(),
-               StudentGroupListScreen(),
+              const StudentListScreen(),
+              StudentGroupListScreen(),
             ],
           ),
         ),

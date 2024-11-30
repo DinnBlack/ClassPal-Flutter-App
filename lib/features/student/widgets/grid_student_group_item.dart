@@ -22,6 +22,7 @@ class GridStudentGroupItem extends StatefulWidget {
 class _GridStudentGroupItemState extends State<GridStudentGroupItem>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -31,7 +32,8 @@ class _GridStudentGroupItemState extends State<GridStudentGroupItem>
       lowerBound: 0.95,
       upperBound: 1.0,
       duration: const Duration(milliseconds: 200),
-    );
+    )..value = 1.0; // Mặc định scale là 1.0
+    _scaleAnimation = _controller;
   }
 
   @override
@@ -94,7 +96,7 @@ class _GridStudentGroupItemState extends State<GridStudentGroupItem>
               backgroundColor: kPrimaryColor,
               child: Text(
                 '+${studentCount - 2}',
-                style: AppTextStyle.semibold(12, Colors.white),
+                style: AppTextStyle.semibold(kTextSizeXs, Colors.white),
               ),
             ),
           ),
@@ -104,17 +106,17 @@ class _GridStudentGroupItemState extends State<GridStudentGroupItem>
 
     return GestureDetector(
       onTapDown: (_) {
-        _controller.reverse();
+        _controller.animateTo(0.95, curve: Curves.easeOut);
       },
       onTapUp: (_) {
-        _controller.forward();
+        _controller.animateTo(1.0, curve: Curves.easeOut);
+        widget.onTapCallback?.call();
       },
       onTapCancel: () {
-        _controller.forward();
+        _controller.animateTo(1.0, curve: Curves.easeOut);
       },
-      onTap: widget.onTapCallback,
       child: ScaleTransition(
-        scale: _controller,
+        scale: _scaleAnimation,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(kBorderRadiusMd),
@@ -157,7 +159,7 @@ class _GridStudentGroupItemState extends State<GridStudentGroupItem>
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                   style: AppTextStyle.semibold(
-                    kTextSizeSm,
+                    kTextSizeXs,
                     widget.add ? kPrimaryColor : kBlackColor,
                   ),
                 ),

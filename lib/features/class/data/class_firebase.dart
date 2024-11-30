@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_class_pal/core/state/app_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/utils/id_generator.dart';
 import '../model/class_model.dart';
+import '../model/post_model.dart';
 
 class ClassFirebase {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -95,6 +97,51 @@ class ClassFirebase {
     } catch (e) {
       print('Error creating class: $e');
       return '';
+    }
+  }
+
+  Future<String> createPost(String classId, PostModel newPost) async {
+    try {
+      String? currentUserId = await _getUserIdFromSharedPreferences();
+      if (currentUserId == null || currentUserId.isEmpty) {
+        throw Exception("User  is not logged in");
+      }
+
+      newPost = newPost.copyWith(userId: AppState.getUser()?.userId);
+
+      // Thêm bài đăng vào trường 'posts' của lớp
+      DocumentReference classRef = _firestore.collection('classes').doc(classId);
+      await classRef.update({
+        'posts': FieldValue.arrayUnion([newPost.toMap()]),
+      });
+
+      return 'Post added successfully';
+    } catch (e) {
+      print('Error creating post: $e');
+      return '';
+    }
+  }
+
+  Future<List<PostModel>> fetchPosts(String classId) async {
+    try {
+      var classDoc = await _firestore.collection('classes').doc(classId).get();
+
+      if (!classDoc.exists) {
+        throw Exception("Class not found");
+      }
+
+      var postsData = classDoc.data()?['posts'] as List<dynamic>? ?? [];
+
+      // Chuyển đổi dữ liệu bài đăng thành danh sách PostModel
+      List<PostModel> posts = postsData.map((post) => PostModel.fromMap(post)).toList();
+
+      // Sắp xếp danh sách bài đăng theo thời gian (thời gian gần nhất lên trên cùng)
+      posts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+      return posts;
+    } catch (e) {
+      print('Error fetching posts: $e');
+      return [];
     }
   }
 }

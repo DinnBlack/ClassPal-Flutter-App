@@ -6,7 +6,7 @@ import 'package:flutter_class_pal/core/constants/constant.dart';
 import 'package:flutter_class_pal/core/utils/app_text_style.dart';
 import 'package:flutter_class_pal/core/widgets/common_widget/custom_button.dart';
 import 'package:flutter_class_pal/core/widgets/common_widget/custom_text_field.dart';
-import 'package:flutter_class_pal/features/class/bloc/class_bloc.dart';
+import 'package:flutter_class_pal/features/class/bloc/class_bloc/class_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../core/widgets/common_widget/loading_dialog.dart';

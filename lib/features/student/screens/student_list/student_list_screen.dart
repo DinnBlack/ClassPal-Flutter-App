@@ -62,26 +62,23 @@ class _StudentListScreenState extends State<StudentListScreen> {
                 if (state is StudentFetchInProgress) {
                   return const LoadingDialog();
                 } else if (state is StudentFetchFailure) {
-                  return Align(
-                    alignment: Alignment.topLeft,
-                    child: GridStudentItem(
-                      student: null,
-                      add: true,
-                      onTapCallback: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) {
-                            return const FractionallySizedBox(
-                              alignment: Alignment.bottomCenter,
-                              heightFactor: 0.95,
-                              child: StudentCreateScreen(),
-                            );
-                          },
-                        );
-                      },
-                      onSelectionChanged: (isSelected) {},
-                    ),
+                  return GridStudentItem(
+                    student: null,
+                    add: true,
+                    onTapCallback: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) {
+                          return const FractionallySizedBox(
+                            alignment: Alignment.bottomCenter,
+                            heightFactor: 0.95,
+                            child: StudentCreateScreen(),
+                          );
+                        },
+                      );
+                    },
+                    onSelectionChanged: (isSelected) {},
                   );
                 } else if (state is StudentFetchSuccess) {
                   final studentData = state.students;
@@ -119,23 +116,25 @@ class _StudentListScreenState extends State<StudentListScreen> {
                           },
                         );
                       } else {
-                        return GridStudentItem(
-                          student: null,
-                          add: true,
-                          onTapCallback: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (context) {
-                                return const FractionallySizedBox(
-                                  alignment: Alignment.bottomCenter,
-                                  heightFactor: 0.95,
-                                  child: StudentCreateScreen(),
-                                );
-                              },
-                            );
-                          },
-                          onSelectionChanged: (isSelected) {},  // Không làm gì khi không có sinh viên
+                        return Container(
+                          child: GridStudentItem(
+                            student: null,
+                            add: true,
+                            onTapCallback: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (context) {
+                                  return const FractionallySizedBox(
+                                    alignment: Alignment.bottomCenter,
+                                    heightFactor: 0.95,
+                                    child: StudentCreateScreen(),
+                                  );
+                                },
+                              );
+                            },
+                            onSelectionChanged: (isSelected) {},  // Không làm gì khi không có sinh viên
+                          ),
                         );
                       }
                     },
@@ -231,7 +230,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
                             },
                           );
                         },
-                        onSelectionChanged: (isSelected) {},  // Không làm gì khi không có sinh viên
+                        onSelectionChanged: (isSelected) {},
                       );
                     }
                   },

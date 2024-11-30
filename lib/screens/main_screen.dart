@@ -11,7 +11,7 @@ import '../core/constants/constant.dart';
 import '../core/utils/app_text_style.dart';
 import '../core/widgets/common_widget/custom_app_bar.dart';
 import '../core/widgets/common_widget/custom_list_item.dart';
-import '../features/class/bloc/class_bloc.dart';
+import '../features/class/bloc/class_bloc/class_bloc.dart';
 import '../features/class/screens/class_create/class_create_screen.dart';
 import '../features/class/screens/class_main_screen.dart';
 

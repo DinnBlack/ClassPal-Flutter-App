@@ -4,9 +4,9 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_class_pal/features/teacher/model/teacher_model.dart';
 import 'package:meta/meta.dart';
 
-import '../../../core/state/app_state.dart';
-import '../data/class_firebase.dart';
-import '../model/class_model.dart';
+import '../../../../core/state/app_state.dart';
+import '../../data/class_firebase.dart';
+import '../../model/class_model.dart';
 
 part 'class_event.dart';
 

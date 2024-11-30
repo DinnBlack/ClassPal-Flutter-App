@@ -53,6 +53,9 @@ dependencies:
   permission_handler: ^11.3.1
   firebase_storage: ^12.3.6
   diacritic: ^0.1.6
+  timeago: ^3.7.0
+  flutter_chat_ui: ^1.6.15
+  flutter_chat_types: ^3.6.2
 
 dev_dependencies:
   flutter_test:

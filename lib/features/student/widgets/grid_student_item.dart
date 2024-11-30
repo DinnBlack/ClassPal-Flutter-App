@@ -56,6 +56,9 @@ class _GridStudentItemState extends State<GridStudentItem> with SingleTickerProv
       _controller.reverse();
     }
 
+    // Apply the scale effect only when it's not in isFetchWithoutGroup
+    double scale = widget.isFetchWithoutGroup ? 1.0 : 0.95;
+
     return GestureDetector(
       onTapDown: (_) => widget.isFetchWithoutGroup ? _controller.reverse() : null,
       onTapUp: (_) => widget.isFetchWithoutGroup ? _controller.forward() : null,
@@ -117,7 +120,7 @@ class _GridStudentItemState extends State<GridStudentItem> with SingleTickerProv
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         style: AppTextStyle.semibold(
-                          10,
+                          kTextSizeXs,
                           widget.add ? kPrimaryColor : kBlackColor,
                         ),
                       ),
@@ -146,4 +149,5 @@ class _GridStudentItemState extends State<GridStudentItem> with SingleTickerProv
       ),
     );
   }
+
 }

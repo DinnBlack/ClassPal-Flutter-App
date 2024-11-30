@@ -8,7 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/constants/constant.dart';
 import '../../../core/utils/app_text_style.dart';
 import 'class_page/class_schedule_page.dart';
-import 'class_page/message_page_screen.dart';
+import 'class_page/class_message_page_screen.dart';
 import 'class_page/class_board_page.dart';
 
 class ClassMainScreen extends StatefulWidget {

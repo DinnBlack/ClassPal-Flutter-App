@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_class_pal/core/constants/constant.dart';
 
-import '../../constants/constant.dart';
 import '../../utils/app_text_style.dart';
 
 class CustomTabBar extends StatefulWidget {
@@ -9,7 +9,7 @@ class CustomTabBar extends StatefulWidget {
   final List<String> tabTitles;
   final double lineHeight;
   final double linePadding;
-  final double tabBarWidthRatio;
+  final double tabBarWidthRatio; // Tỷ lệ cho chiều dài của tabBar
   final double tabBarHeight;
 
   const CustomTabBar({
@@ -19,7 +19,7 @@ class CustomTabBar extends StatefulWidget {
     required this.tabTitles,
     this.lineHeight = 2,
     this.linePadding = 20,
-    this.tabBarWidthRatio = 2 / 3,
+    this.tabBarWidthRatio = 2 / 3, // Tỷ lệ như 2/3
     this.tabBarHeight = 50.0,
   }) : super(key: key);
 
@@ -30,13 +30,18 @@ class CustomTabBar extends StatefulWidget {
 class _CustomTabBarState extends State<CustomTabBar> {
   @override
   Widget build(BuildContext context) {
+    // Tính chiều dài tổng tab bar dựa vào chiều rộng màn hình và tỷ lệ tabBarWidthRatio
     double screenWidth = MediaQuery.of(context).size.width;
-    double tabBarWidth = screenWidth * widget.tabBarWidthRatio;
-    double tabWidth = tabBarWidth / widget.tabTitles.length;
+    double totalLength = screenWidth * widget.tabBarWidthRatio;
+
+    // Tính chiều dài mỗi tab
+    double tabWidth = totalLength / widget.tabTitles.length;
+
+    // Đảm bảo chiều dài đường line bằng chiều rộng của tab
     double lineWidth = tabWidth;
 
     return SizedBox(
-      width: tabBarWidth,
+      width: totalLength, // Tab bar sẽ có chiều rộng tính từ tổng chiều dài
       height: widget.tabBarHeight,
       child: Stack(
         children: [
@@ -48,8 +53,8 @@ class _CustomTabBarState extends State<CustomTabBar> {
               width: lineWidth,
               height: widget.lineHeight,
               decoration: BoxDecoration(
-                color: kPrimaryColor,
-                borderRadius: BorderRadius.circular(kBorderRadiusXl),
+                color: kPrimaryColor, // Màu của đường line
+                borderRadius: BorderRadius.circular(5),
               ),
             ),
           ),
@@ -83,6 +88,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
   }
 
   double _getTabPosition(int index, double tabWidth, double lineWidth) {
+    // Tính toán vị trí của đường line, để đường line nằm ở trung tâm của mỗi tab
     double tabPosition = tabWidth * index;
     return tabPosition + (tabWidth / 2) - (lineWidth / 2);
   }
