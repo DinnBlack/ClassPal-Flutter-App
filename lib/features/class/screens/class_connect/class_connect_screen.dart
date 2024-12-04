@@ -75,18 +75,21 @@ class _ClassConnectScreenState extends State<ClassConnectScreen> {
             ),
           ),
           Expanded(
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              children: const [
-                ClassConnectParentPage(),
-                ClassConnectTeacherPage(),
-                ClassConnectStudentPage(),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kPaddingMd),
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                children: const [
+                  ClassConnectParentPage(),
+                  ClassConnectTeacherPage(),
+                  ClassConnectStudentPage(),
+                ],
+              ),
             ),
           ),
         ],

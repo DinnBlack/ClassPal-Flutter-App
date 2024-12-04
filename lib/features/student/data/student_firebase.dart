@@ -45,6 +45,37 @@ class StudentFirebase {
     }
   }
 
+  Future<List<StudentModel>> fetchStudentsConnectedToParent(String classId, bool isConnected) async {
+    try {
+      // Fetch dữ liệu lớp học từ Firestore
+      DocumentSnapshot classDoc = await _firestore.collection('classes').doc(classId).get();
+      if (!classDoc.exists) {
+        throw Exception("Class not found");
+      }
+
+      Map<String, dynamic> classData = classDoc.data() as Map<String, dynamic>;
+      ClassModel classModel = ClassModel.fromMap(classData);
+      List<StudentModel> allStudents = classModel.students;
+
+      // Lọc danh sách học sinh dựa trên trạng thái kết nối
+      List<StudentModel> filteredStudents = allStudents.where((student) {
+        return isConnected ? student.parentId != null : student.parentId == null;
+      }).toList();
+
+      // Sắp xếp danh sách theo tên (loại bỏ dấu)
+      filteredStudents.sort((a, b) {
+        String nameA = removeDiacritics(a.name);
+        String nameB = removeDiacritics(b.name);
+        return nameA.compareTo(nameB);
+      });
+
+      return filteredStudents;
+    } catch (e) {
+      print('Error fetching students connected to parent: $e');
+      return [];
+    }
+  }
+
   // Create a new student and associate them with a class
   Future<String> createStudent(StudentModel newStudent, String classId) async {
     try {

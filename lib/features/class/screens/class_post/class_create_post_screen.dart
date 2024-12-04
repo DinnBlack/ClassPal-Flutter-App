@@ -96,7 +96,7 @@ class _ClassCreatePostScreenState extends State<ClassCreatePostScreen> {
                         child: const FaIcon(FontAwesomeIcons.check),
                         onTap: () {
                           PostModel newPost = PostModel(
-                            userId: AppState.getUser()!.userId,
+                            user: AppState.getUser()!,
                             createdAt: DateTime.now(),
                             content: _contentController.text,
                           );

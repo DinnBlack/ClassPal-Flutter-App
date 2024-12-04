@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_class_pal/core/widgets/common_widget/custom_list_item.dart';
 import 'package:flutter_class_pal/features/class/screens/class_connect/class_connect_screen.dart';
-import 'package:flutter_class_pal/features/class/screens/class_connect/class_connect_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../core/constants/constant.dart';

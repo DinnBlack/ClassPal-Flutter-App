@@ -107,7 +107,7 @@ class ClassFirebase {
         throw Exception("User  is not logged in");
       }
 
-      newPost = newPost.copyWith(userId: AppState.getUser()?.userId);
+      newPost = newPost.copyWith(user: AppState.getUser());
 
       // Thêm bài đăng vào trường 'posts' của lớp
       DocumentReference classRef = _firestore.collection('classes').doc(classId);

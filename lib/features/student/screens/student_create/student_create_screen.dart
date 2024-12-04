@@ -12,7 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/state/app_state.dart';
 import '../../../../core/widgets/common_widget/loading_dialog.dart';
 import '../../../../core/widgets/normal_widget/custom_button_camera.dart';
-import '../../bloc/student/student_bloc.dart';
+import '../../bloc/student/create/student_create_bloc.dart';
 
 class StudentCreateScreen extends StatefulWidget {
   const StudentCreateScreen({super.key});
@@ -50,7 +50,9 @@ class _StudentCreateScreenState extends State<StudentCreateScreen> {
     try {
       // Generate a unique file name
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      Reference storageRef = FirebaseStorage.instance.ref().child('${AppState.getClass()?.classId}/$fileName');
+      Reference storageRef = FirebaseStorage.instance
+          .ref()
+          .child('${AppState.getClass()?.classId}/$fileName');
 
       // Upload the file
       await storageRef.putFile(image);
@@ -144,7 +146,7 @@ class _StudentCreateScreenState extends State<StudentCreateScreen> {
           const SizedBox(height: kMarginMd),
 
           // Button to Create Student
-          BlocConsumer<StudentBloc, StudentState>(
+          BlocConsumer<StudentCreateBloc, StudentCreateState>(
             listener: (context, state) {
               if (state is StudentCreateInProgress) {
                 LoadingDialog.showLoadingDialog(context);
@@ -164,7 +166,6 @@ class _StudentCreateScreenState extends State<StudentCreateScreen> {
                 }
 
                 Navigator.pop(context);
-                context.read<StudentBloc>().add(StudentResetStarted());
               }
             },
             builder: (context, state) {
@@ -172,29 +173,29 @@ class _StudentCreateScreenState extends State<StudentCreateScreen> {
                 text: 'Tạo',
                 onPressed: _isValid
                     ? () async {
-                  final fullName = _fullNameController.text.trim();
-                  final gender = _genderController.text.trim();
-                  final dob = _dobController.text.trim();
+                        final fullName = _fullNameController.text.trim();
+                        final gender = _genderController.text.trim();
+                        final dob = _dobController.text.trim();
 
-                  if (fullName.isNotEmpty &&
-                      gender.isNotEmpty &&
-                      dob.isNotEmpty) {
-                    String? imageUrl;
-                    if (_selectedImage != null) {
-                      imageUrl = await _uploadImage(_selectedImage!);
-                    }
+                        if (fullName.isNotEmpty &&
+                            gender.isNotEmpty &&
+                            dob.isNotEmpty) {
+                          String? imageUrl;
+                          if (_selectedImage != null) {
+                            imageUrl = await _uploadImage(_selectedImage!);
+                          }
 
-                    context.read<StudentBloc>().add(StudentCreateStarted(
-                      name: fullName,
-                      gender: gender,
-                      birthDate: dob,
-                      image: imageUrl,
-                    ));
-                  }
-                }
+                          context.read<StudentCreateBloc>().add(StudentCreateStarted(
+                                name: fullName,
+                                gender: gender,
+                                birthDate: dob,
+                                image: imageUrl,
+                              ));
+                        }
+                      }
                     : null,
                 backgroundColor:
-                _isValid ? kPrimaryColor : kPrimaryColor.withOpacity(0.5),
+                    _isValid ? kPrimaryColor : kPrimaryColor.withOpacity(0.5),
               );
             },
           ),

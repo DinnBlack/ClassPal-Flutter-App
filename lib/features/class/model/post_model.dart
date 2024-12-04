@@ -1,20 +1,21 @@
-import 'package:cloud_firestore/cloud_firestore.dart'; // Đảm bảo bạn đã import thư viện này
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../user/model/user_model.dart';
 
 class PostModel {
-  final String userId;
+  final UserModel user;
   final DateTime createdAt;
   final String content;
   final String? image;
-  final int likes; // Số lượt thích
-  final int views; // Số lượt xem
+  final int likes;
+  final int views;
 
   const PostModel({
-    required this.userId,
+    required this.user,
     required this.createdAt,
     required this.content,
     this.image,
-    this.likes = 0, // Mặc định là 0
-    this.views = 0, // Mặc định là 0
+    this.likes = 0,
+    this.views = 0,
   });
 
   @override
@@ -22,7 +23,7 @@ class PostModel {
       identical(this, other) ||
           (other is PostModel &&
               runtimeType == other.runtimeType &&
-              userId == other.userId &&
+              user == other.user &&
               createdAt == other.createdAt &&
               content == other.content &&
               image == other.image &&
@@ -31,7 +32,7 @@ class PostModel {
 
   @override
   int get hashCode =>
-      userId.hashCode ^
+      user.hashCode ^
       createdAt.hashCode ^
       content.hashCode ^
       (image?.hashCode ?? 0) ^
@@ -41,7 +42,7 @@ class PostModel {
   @override
   String toString() {
     return 'PostModel{' +
-        ' userId: $userId,' +
+        ' user: ${user.toMap()},' +
         ' createdAt: $createdAt,' +
         ' content: $content,' +
         ' image: $image,' +
@@ -51,7 +52,7 @@ class PostModel {
   }
 
   PostModel copyWith({
-    String? userId,
+    UserModel? user,
     DateTime? createdAt,
     String? content,
     String? image,
@@ -59,7 +60,7 @@ class PostModel {
     int? views,
   }) {
     return PostModel(
-      userId: userId ?? this.userId,
+      user: user ?? this.user,
       createdAt: createdAt ?? this.createdAt,
       content: content ?? this.content,
       image: image ?? this.image,
@@ -70,25 +71,25 @@ class PostModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'userId': userId,
-      'createdAt': Timestamp.fromDate(createdAt), // Chuyển đổi DateTime sang Timestamp
+      'user': user.toMap(), // Chuyển đổi UserModel sang Map
+      'createdAt': Timestamp.fromDate(createdAt),
       'content': content,
       'image': image,
-      'likes': likes, // Thêm số lượt thích
-      'views': views, // Thêm số lượt xem
+      'likes': likes,
+      'views': views,
     };
   }
 
   factory PostModel.fromMap(Map<String, dynamic> map) {
     return PostModel(
-      userId: map['userId'] as String,
+      user: UserModel.fromMap(map['user'] as Map<String, dynamic>), // Chuyển đổi từ Map sang UserModel
       createdAt: (map['createdAt'] is Timestamp)
-          ? (map['createdAt'] as Timestamp).toDate() // Chuyển đổi từ Timestamp sang DateTime
-          : DateTime.parse(map['createdAt'] as String), // Nếu là String, chuyển đổi
+          ? (map['createdAt'] as Timestamp).toDate()
+          : DateTime.parse(map['createdAt'] as String),
       content: map['content'] as String,
       image: map['image'] as String?,
-      likes: map['likes'] as int? ?? 0, // Mặc định là 0 nếu không có
-      views: map['views'] as int? ?? 0, // Mặc định là 0 nếu không có
+      likes: map['likes'] as int? ?? 0,
+      views: map['views'] as int? ?? 0,
     );
   }
 }

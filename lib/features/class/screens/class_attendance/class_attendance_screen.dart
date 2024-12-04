@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_class_pal/core/constants/constant.dart';
 import 'package:flutter_class_pal/core/utils/app_text_style.dart';
 import 'package:flutter_class_pal/core/widgets/common_widget/custom_list_item.dart';
-import 'package:flutter_class_pal/features/class/bloc/class_bloc/class_bloc.dart';
-import 'package:flutter_class_pal/features/student/bloc/student/student_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../student/bloc/student/fetch/student_fetch_bloc.dart';
 
 class ClassAttendanceScreen extends StatefulWidget {
   const ClassAttendanceScreen({super.key});
@@ -93,7 +93,7 @@ class _ClassAttendanceScreenState extends State<ClassAttendanceScreen> {
               style: AppTextStyle.semibold(kTextSizeMd, kPrimaryColor),
             ),
             const SizedBox(height: kMarginLg),
-            BlocBuilder<StudentBloc, StudentState>(
+            BlocBuilder<StudentFetchBloc, StudentFetchState>(
               builder: (context, state) {
                 if (state is StudentFetchInProgress) {
                   return const Center(child: CircularProgressIndicator());

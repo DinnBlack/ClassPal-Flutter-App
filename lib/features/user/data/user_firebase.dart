@@ -39,4 +39,35 @@ class UserFirebase {
       return null;
     }
   }
+
+  Future<UserModel?> getUserById(String userId) async {
+    if (userId.isEmpty) {
+      print("ID người dùng không hợp lệ (trống).");
+      return null;
+    }
+
+    try {
+      // Truy vấn người dùng dựa trên field 'userId'
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('users')
+          .where('userId', isEqualTo: userId)
+          .limit(1)
+          .get();
+
+      // Kiểm tra xem truy vấn có dữ liệu không
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentSnapshot userDoc = querySnapshot.docs.first;
+        return UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+      } else {
+        print("Không tìm thấy người dùng với userId $userId trong Firestore.");
+        return null;
+      }
+    } on FirebaseException catch (e) {
+      print("Lỗi Firestore khi lấy thông tin người dùng với userId $userId: ${e.message}");
+      return null;
+    } catch (e) {
+      print("Lỗi không xác định khi lấy thông tin người dùng với userId $userId: $e");
+      return null;
+    }
+  }
 }
