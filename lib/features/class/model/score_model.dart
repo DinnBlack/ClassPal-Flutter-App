@@ -1,11 +1,15 @@
+import 'package:flutter_class_pal/features/class/model/score_type_model.dart';
+
 class ScoreModel {
-  final String subjectName;
-  final Map<String, double> scores;
+  final String studentId;
+  final String studentName;
+  final List<ScoreTypeModel> scoreTypes;
 
 //<editor-fold desc="Data Methods">
   const ScoreModel({
-    required this.subjectName,
-    required this.scores,
+    required this.studentId,
+    required this.studentName,
+    required this.scoreTypes,
   });
 
   @override
@@ -13,41 +17,48 @@ class ScoreModel {
       identical(this, other) ||
       (other is ScoreModel &&
           runtimeType == other.runtimeType &&
-          subjectName == other.subjectName &&
-          scores == other.scores);
+          studentId == other.studentId &&
+          studentName == other.studentName &&
+          scoreTypes == other.scoreTypes);
 
   @override
-  int get hashCode => subjectName.hashCode ^ scores.hashCode;
+  int get hashCode =>
+      studentId.hashCode ^ studentName.hashCode ^ scoreTypes.hashCode;
 
   @override
   String toString() {
     return 'ScoreModel{' +
-        ' subjectName: $subjectName,' +
-        ' scores: $scores,' +
+        ' studentId: $studentId,' +
+        ' studentName: $studentName,' +
+        ' scoreTypes: $scoreTypes,' +
         '}';
   }
 
   ScoreModel copyWith({
-    String? subjectName,
-    Map<String, double>? scores,
+    String? studentId,
+    String? studentName,
+    List<ScoreTypeModel>? scoreTypes,
   }) {
     return ScoreModel(
-      subjectName: subjectName ?? this.subjectName,
-      scores: scores ?? this.scores,
+      studentId: studentId ?? this.studentId,
+      studentName: studentName ?? this.studentName,
+      scoreTypes: scoreTypes ?? this.scoreTypes,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'subjectName': this.subjectName,
-      'scores': this.scores,
+      'studentId': this.studentId,
+      'studentName': this.studentName,
+      'scoreTypes': this.scoreTypes.map((scoreType) => scoreType.toMap()).toList(),
     };
   }
 
   factory ScoreModel.fromMap(Map<String, dynamic> map) {
     return ScoreModel(
-      subjectName: map['subjectName'] as String,
-      scores: map['scores'] as Map<String, double>,
+      studentId: map['studentId'] as String,
+      studentName: map['studentName'] as String,
+      scoreTypes: (map['scoreTypes'] as List<dynamic>).map((item) => ScoreTypeModel.fromMap(item)).toList(),
     );
   }
 

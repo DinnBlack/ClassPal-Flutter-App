@@ -1,9 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter_class_pal/features/auth/data/auth_firebase.dart';
 import 'package:meta/meta.dart';
-
 import '../../../core/state/app_state.dart';
 import '../../user/model/user_model.dart';
-import '../data/auth_firebase.dart';
 
 part 'auth_event.dart';
 
@@ -16,6 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSelectRoleStarted>(_onAuthSelectRoleStarted);
     on<AuthLoginStarted>(_onAuthLoginStarted);
     on<AuthRegisterStarted>(_onAuthRegisterStarted);
+    on<AuthLogoutStarted>(_onAuthLogoutStarted);
   }
 
   // bloc chọn role
@@ -31,18 +31,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoginInProgress());
     UserModel? user =
         await _authFirebase.loginUser(event.email, event.password);
-    print(event.email);
-    print(event.password);
-    print(user);
-    if (user != null) {
-      AppState.setUser(user);
-      emit(AuthLoginSuccess(user));
-      print('Bloc Thành Công');
-    } else {
-      emit(AuthLoginFailure("Login failed"));
-      print('Bloc Thất Bại');
+    AppState.setUser(user!);
+    emit(AuthLoginSuccess(user));
     }
-  }
 
   // bloc đăng ký
   Future<void> _onAuthRegisterStarted(
@@ -70,6 +61,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       emit(AuthRegisterFailure("Error: $e"));
+    }
+  }
+
+  // bloc đăng xuất
+  Future<void> _onAuthLogoutStarted(
+      AuthLogoutStarted event, Emitter<AuthState> emit) async {
+    emit(AuthLogoutInProgress());
+    try {
+      // await _authFirebase.logout();
+      emit(AuthLogoutSuccess());
+    } catch (e) {
+      emit(AuthLogoutFailure("Login failed"));
     }
   }
 }

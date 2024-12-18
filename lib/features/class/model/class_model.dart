@@ -106,7 +106,6 @@ class ClassModel {
   }
 
   factory ClassModel.fromMap(Map<String, dynamic> map) {
-    print("Raw groups data: ${map['groups']}"); // Debug giá trị groups
     return ClassModel(
       classId: map['classId'] as String,
       creatorId: map['creatorId'] as String,
@@ -120,7 +119,8 @@ class ClassModel {
               ?.map((e) => StudentModel.fromMap(e as Map<String, dynamic>))
               .toList() ??
           [],
-      isPersonalClass: map['isPersonalClass'] as bool,
+      isPersonalClass: map['isPersonalClass'] != null ? map['isPersonalClass'] as bool : false,
+
       attendanceRecords: map['attendanceRecords'] != null
           ? (map['attendanceRecords'] as List<dynamic>)
               .map((e) =>

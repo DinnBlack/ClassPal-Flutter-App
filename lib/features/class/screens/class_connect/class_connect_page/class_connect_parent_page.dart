@@ -4,6 +4,7 @@ import 'package:flutter_class_pal/core/constants/constant.dart';
 import 'package:flutter_class_pal/core/utils/app_text_style.dart';
 import 'package:flutter_class_pal/core/widgets/common_widget/custom_list_item.dart';
 import 'package:flutter_class_pal/core/widgets/common_widget/loading_dialog.dart';
+import 'package:flutter_class_pal/core/widgets/normal_widget/invite_user.dart';
 import '../../../../student/bloc/student/fetch/student_fetch_bloc.dart';
 
 class ClassConnectParentPage extends StatelessWidget {
@@ -73,6 +74,37 @@ class ClassConnectParentPage extends StatelessWidget {
                                   style: AppTextStyle.semibold(
                                       kTextSizeSm, kPrimaryColor),
                                 ),
+                                onTap: () {
+                                  showGeneralDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    barrierLabel: '',
+                                    pageBuilder: (context, animation,
+                                        secondaryAnimation) {
+                                      return Center(
+                                        child: ScaleTransition(
+                                          scale: CurvedAnimation(
+                                            parent: animation,
+                                            curve: Curves.easeInOut,
+                                          ),
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InviteUser(student: student),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    transitionBuilder: (context, animation,
+                                        secondaryAnimation, child) {
+                                      return FadeTransition(
+                                        opacity: animation,
+                                        child: child,
+                                      );
+                                    },
+                                    transitionDuration:
+                                        const Duration(milliseconds: 300),
+                                  );
+                                },
                               );
                             }).toList(),
                           ),
@@ -94,7 +126,7 @@ class ClassConnectParentPage extends StatelessWidget {
                             children: connectedStudents.map((student) {
                               return ListTile(
                                 title: Text(student.name),
-                                subtitle: Text('Đã kết nối'),
+                                subtitle: const Text('Đã kết nối'),
                               );
                             }).toList(),
                           ),

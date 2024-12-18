@@ -4,9 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_class_pal/core/widgets/common_widget/loading_dialog.dart';
-import 'package:flutter_class_pal/features/auth/data/auth_firebase.dart';
 import 'package:flutter_class_pal/features/auth/screens/auth_select_role/select_role_screen.dart';
-import 'package:flutter_class_pal/features/class/bloc/class_bloc/class_bloc.dart';
+import 'package:flutter_class_pal/features/class/bloc/class_bloc.dart';
 import 'package:flutter_class_pal/features/class/data/class_firebase.dart';
 import 'package:flutter_class_pal/features/user/data/user_firebase.dart';
 import 'package:flutter_class_pal/routes/routes.dart';
@@ -17,7 +16,9 @@ import 'core/services/firebase/firebase_option.dart';
 import 'core/state/app_state.dart';
 import 'core/themes/theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
-import 'features/class/bloc/post_bloc/post_bloc.dart';
+import 'features/auth/data/auth_firebase.dart';
+import 'features/class/bloc/subject/subject_cubit.dart';
+import 'features/post/bloc/post_bloc.dart';
 import 'features/student/bloc/student/create/student_create_bloc.dart';
 import 'features/student/bloc/student/fetch/student_fetch_bloc.dart';
 import 'features/student/bloc/student_group/student_group_bloc.dart';
@@ -49,6 +50,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => UserBloc(UserFirebase())),
         BlocProvider(create: (context) => ClassBloc(ClassFirebase())),
         BlocProvider(create: (context) => PostBloc(ClassFirebase())),
+        BlocProvider(create: (context) => SubjectCubit(ClassFirebase())),
+
         //Student Bloc
         BlocProvider(create: (context) => StudentFetchBloc(StudentFirebase())),
         BlocProvider(

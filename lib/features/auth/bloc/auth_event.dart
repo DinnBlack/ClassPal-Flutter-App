@@ -33,3 +33,6 @@ class AuthRegisterStarted extends AuthEvent {
     required this.gender,
   });
 }
+
+// Event đăng xuất
+class AuthLogoutStarted extends AuthEvent {}

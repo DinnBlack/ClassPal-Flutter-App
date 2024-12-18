@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_class_pal/core/state/app_state.dart';
 import 'package:meta/meta.dart';
 
-import '../../data/class_firebase.dart';
-import '../../model/post_model.dart';
+import '../../class/data/class_firebase.dart';
+import '../model/post_model.dart';
 
 part 'post_event.dart';
 

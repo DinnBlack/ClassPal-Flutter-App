@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_class_pal/core/widgets/common_widget/loading_dialog.dart';
-import 'package:flutter_class_pal/features/class/widgets/class_post_item.dart';
 import 'package:flutter_class_pal/features/class/widgets/custom_button_create_post.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../core/constants/constant.dart';
 import '../../../../core/utils/app_text_style.dart';
 import '../../../../core/widgets/common_widget/custom_app_bar.dart';
-import '../../bloc/post_bloc/post_bloc.dart';
+import '../../../post/bloc/post_bloc.dart';
+import '../../../post/widgets/class_post_item.dart';
 import '../../model/class_model.dart';
 import '../class_post/class_create_post_screen.dart';
-import '../../model/post_model.dart';
 
 class ClassBoardPage extends StatelessWidget {
   static const route = 'ClassBoardPage';
@@ -21,7 +20,6 @@ class ClassBoardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Trigger fetch posts when the page is built
     BlocProvider.of<PostBloc>(context).add(PostFetchStarted());
 
     return Scaffold(
@@ -61,17 +59,16 @@ class ClassBoardPage extends StatelessWidget {
                         return ClassPostItem(post: post);
                       }).toList(),
                     ] else if (state is PostFetchFailure) ...[
-                      Center(child: Text('Failed to fetch posts:')),
+                      const Center(child: Text('Failed to fetch posts:')),
                     ] else if (state is PostFetchInProgress) ...[
-                      // Không cần xử lý loading ở đây, sẽ hiển thị ở Stack
                     ] else ...[
-                      Center(child: Text('No posts available.')),
+                      const Center(child: Text('No posts available.')),
                     ],
                   ],
                 ),
               ),
               if (state is PostFetchInProgress) ...[
-                LoadingDialog(),
+                const LoadingDialog(),
               ],
             ],
           );

@@ -8,8 +8,8 @@ import '../../../../core/constants/constant.dart';
 import '../../../../core/state/app_state.dart';
 import '../../../../core/utils/app_text_style.dart';
 import '../../../../core/widgets/common_widget/loading_dialog.dart';
-import '../../bloc/post_bloc/post_bloc.dart';
-import '../../model/post_model.dart';
+import '../../../post/bloc/post_bloc.dart';
+import '../../../post/model/post_model.dart';
 
 class ClassCreatePostScreen extends StatefulWidget {
   const ClassCreatePostScreen({super.key});

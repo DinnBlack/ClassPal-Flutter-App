@@ -41,3 +41,14 @@ class AuthRegisterFailure extends AuthState {
 
   AuthRegisterFailure(this.error);
 }
+
+// Đăng xuất state
+class AuthLogoutInProgress extends AuthState {}
+
+class AuthLogoutSuccess extends AuthState {}
+
+class AuthLogoutFailure extends AuthState {
+  final String error;
+
+  AuthLogoutFailure(this.error);
+}

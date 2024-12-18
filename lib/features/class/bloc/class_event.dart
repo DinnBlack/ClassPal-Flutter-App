@@ -12,3 +12,16 @@ class ClassCreateStarted extends ClassEvent {
 }
 
 class ClassFetchStarted extends ClassEvent {}
+
+class ClassInviteTeacherStarted extends ClassEvent {
+  final String teacherEmail;
+
+  ClassInviteTeacherStarted({required this.teacherEmail});
+}
+
+class ClassJoinStarted extends ClassEvent {
+  final String classId;
+
+  ClassJoinStarted({required this.classId});
+}
+

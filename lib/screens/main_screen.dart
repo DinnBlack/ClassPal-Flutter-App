@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_class_pal/core/state/app_state.dart';
 import 'package:flutter_class_pal/core/widgets/common_widget/loading_dialog.dart';
+import 'package:flutter_class_pal/features/class/screens/class_join/class_join_screen.dart';
 import 'package:flutter_class_pal/features/user/model/user_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -11,7 +12,7 @@ import '../core/constants/constant.dart';
 import '../core/utils/app_text_style.dart';
 import '../core/widgets/common_widget/custom_app_bar.dart';
 import '../core/widgets/common_widget/custom_list_item.dart';
-import '../features/class/bloc/class_bloc/class_bloc.dart';
+import '../features/class/bloc/class_bloc.dart';
 import '../features/class/screens/class_create/class_create_screen.dart';
 import '../features/class/screens/class_main_screen.dart';
 
@@ -98,34 +99,7 @@ class _MainScreenState extends State<MainScreen> {
           var classes = state.classes;
           return Scaffold(
             backgroundColor: kBackgroundColor,
-            appBar: CustomAppBar(
-              leading: GestureDetector(
-                onTap: () {
-                  BlocProvider.of<ClassBloc>(context).add(ClassFetchStarted());
-                },
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircleAvatar(
-                      radius: 16,
-                      backgroundColor: kPrimaryColor,
-                      child: FaIcon(
-                        FontAwesomeIcons.solidUser,
-                        size: 18,
-                      ),
-                    ),
-                    SizedBox(width: kMarginSm),
-                    FaIcon(
-                      FontAwesomeIcons.chevronDown,
-                      size: 14,
-                    ),
-                  ],
-                ),
-              ),
-              onLeadingTap: () {
-                print("Menu tapped");
-              },
-            ),
+            appBar: _buildAppBar(context),
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(kPaddingMd),
@@ -263,7 +237,7 @@ class _MainScreenState extends State<MainScreen> {
                             return const FractionallySizedBox(
                               alignment: Alignment.bottomCenter,
                               heightFactor: 0.95,
-                              child: ClassCreateScreen(),
+                              child: ClassJoinScreen(),
                             );
                           },
                         );
@@ -305,9 +279,114 @@ class _MainScreenState extends State<MainScreen> {
           );
         }
 
-        return const Center(
-          child: Text('Đang tải dữ liệu...'),
-        );
+        return SizedBox.shrink();
+      },
+    );
+  }
+
+  CustomAppBar _buildAppBar(BuildContext context) {
+    return CustomAppBar(
+      leading: GestureDetector(
+        onTap: () {
+          showModalBottomSheet(
+            context: context,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(kBorderRadiusMd),
+              ),
+            ),
+            builder: (BuildContext context) {
+              return FractionallySizedBox(
+                heightFactor: 1 / 2,
+                widthFactor: 1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kPaddingMd),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 4,
+                        width: 40,
+                        margin: const EdgeInsets.symmetric(vertical: kMarginMd),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                      CustomListItem(
+                        imageUrl: 'assets/images/default_avatar.jpg',
+                        title: '${currentUser?.gender} ${currentUser?.name}',
+                        subtitle: 'Giáo viên',
+                      ),
+                      CustomListItem(
+                        title: 'Thêm tài khoản',
+                        titleStyle:
+                            AppTextStyle.semibold(kTextSizeSm, kPrimaryColor),
+                        customLeadingWidget: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: const BoxDecoration(
+                            color: kPrimaryColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            FontAwesomeIcons.plus,
+                            color: kWhiteColor,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                      CustomListItem(
+                        onTap: () {},
+                        title: 'Đăng xuất khỏi tài khoản hiện tại',
+                        titleStyle:
+                            AppTextStyle.semibold(kTextSizeSm, kRedColor),
+                        customLeadingWidget: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: const BoxDecoration(
+                            color: kRedColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.logout,
+                            color: kWhiteColor,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: kPrimaryColor,
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/default_avatar.jpg',
+                  fit: BoxFit.cover,
+                  width: 40,
+                  height: 40,
+                ),
+              ),
+            ),
+            const SizedBox(width: kMarginSm),
+            const FaIcon(
+              FontAwesomeIcons.chevronDown,
+              size: 14,
+            ),
+          ],
+        ),
+      ),
+      onLeadingTap: () {
+        print("Menu tapped");
       },
     );
   }

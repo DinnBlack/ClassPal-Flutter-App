@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart'; // Import the intl package
 import '../../constants/constant.dart';
 import '../../utils/app_text_style.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomTextField extends StatefulWidget {
   final String? text; // Có thể null
@@ -15,6 +16,7 @@ class CustomTextField extends StatefulWidget {
   final bool autofocus;
   final String? defaultValue;
   final bool isDateTimePicker; // New parameter to handle date picker
+  final Widget? suffixIcon; // New parameter for optional suffix icon
 
   const CustomTextField({
     super.key,
@@ -28,6 +30,7 @@ class CustomTextField extends StatefulWidget {
     this.autofocus = false,
     this.defaultValue,
     this.isDateTimePicker = false, // Default is false
+    this.suffixIcon, // Initialize with default null
   });
 
   @override
@@ -63,6 +66,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _focusNode.dispose();
     super.dispose();
   }
+
   void _showOptionsDialog() {
     showDialog(
       context: context,
@@ -112,7 +116,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
       },
     );
   }
-
 
   Future<void> _selectDate() async {
     DateTime? pickedDate = await showDatePicker(
@@ -168,7 +171,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               width: 1.0,
             ),
           ),
-          suffixIcon: isOptionMode
+          suffixIcon: widget.suffixIcon ?? (isOptionMode
               ? const Icon(
             Icons.arrow_drop_down_circle_outlined,
             color: kGreyColor,
@@ -177,9 +180,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               : (widget.isPassword
               ? InkWell(
             child: Icon(
-              _isObscured
-                  ? Icons.visibility
-                  : Icons.visibility_off,
+              _isObscured ? Icons.visibility : Icons.visibility_off,
               size: 16,
             ),
             onTap: () {
@@ -188,7 +189,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               });
             },
           )
-              : null),
+              : null)),
         ),
         onTap: widget.isDateTimePicker ? _selectDate : (isOptionMode ? _showOptionsDialog : null),
         inputFormatters: widget.isNumber ? [FilteringTextInputFormatter.digitsOnly] : null,

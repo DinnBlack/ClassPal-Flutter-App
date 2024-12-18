@@ -32,7 +32,7 @@ class _GridStudentGroupItemState extends State<GridStudentGroupItem>
       lowerBound: 0.95,
       upperBound: 1.0,
       duration: const Duration(milliseconds: 200),
-    )..value = 1.0; // Mặc định scale là 1.0
+    )..value = 1.0;
     _scaleAnimation = _controller;
   }
 

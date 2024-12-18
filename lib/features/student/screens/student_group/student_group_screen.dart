@@ -36,7 +36,6 @@ class _StudentGroupListScreenState extends State<StudentGroupListScreen> {
               stream: context.read<StudentGroupBloc>().fetchStream,
               builder: (context, snapshot) {
                 final state = context.watch<StudentGroupBloc>().state;
-
                 if (state is StudentGroupFetchInProgress) {
                   return const LoadingDialog();
                 } else if (state is StudentGroupFetchFailure) {

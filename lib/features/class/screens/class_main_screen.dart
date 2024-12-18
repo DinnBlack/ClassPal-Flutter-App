@@ -117,7 +117,7 @@ class _ClassMainScreenState extends State<ClassMainScreen> {
       backgroundColor: Colors.white,
       body: PageView(
         controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(), // Ngăn cuộn bằng tay nếu không cần thiết
+        physics: const NeverScrollableScrollPhysics(),
         children: _pages,
       ),
       bottomNavigationBar: BottomBarCreative(

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_class_pal/core/widgets/common_widget/custom_list_item.dart';
+import 'package:flutter_class_pal/features/class/bloc/subject/subject_cubit.dart';
+import 'package:flutter_class_pal/features/class/data/class_firebase.dart';
 import 'package:flutter_class_pal/features/class/screens/class_connect/class_connect_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -11,6 +14,7 @@ import '../../../student/screens/student_group/student_group_screen.dart';
 import '../../../student/screens/student_list/student_list_screen.dart';
 import '../../model/class_model.dart';
 import '../class_attendance/class_attendance_screen.dart';
+import '../class_score/class_score_screen.dart';
 
 class ClassDashboardPage extends StatefulWidget {
   static const route = "ClassDashboardPage";
@@ -126,9 +130,22 @@ class _ClassDashboardPageState extends State<ClassDashboardPage> {
                 height: kMarginSm,
               ),
               CustomListItem(
-                title: 'Chỉnh cấu hình điểm',
+                title: 'Điểm số',
                 titleStyle: AppTextStyle.medium(kTextSizeSm),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) {
+                      return const FractionallySizedBox(
+                        alignment: Alignment.bottomCenter,
+                        heightFactor: 0.95,
+                        child: ClassScoreScreen(),
+                      );
+                    },
+                  );
+                },
                 customLeadingWidget: const FaIcon(
                   FontAwesomeIcons.fiveHundredPx,
                   size: 18,
